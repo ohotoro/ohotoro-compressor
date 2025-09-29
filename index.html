@@ -478,6 +478,9 @@
         <header>
             <h1>OHOTORO COMPRESSOR</h1>
             <div class="subtitle">Photo & Video Optimization</div>
+            <button id="reset-settings" style="margin-top: 20px; padding: 6px 16px; background: none; border: 1px solid #d0d0d0; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: #999; transition: all 0.3s ease;" 
+                onmouseover="this.style.borderColor='#111'; this.style.color='#111';" 
+                onmouseout="this.style.borderColor='#d0d0d0'; this.style.color='#999';">Reset Settings</button>
         </header>
 
         <!-- 탭 네비게이션 -->
@@ -502,12 +505,12 @@
                 <div class="settings-group">
                     <label class="settings-label">Quality</label>
                     <div class="radio-group" id="photo-quality">
-                        <label class="radio-option selected">
-                            <input type="radio" name="photo-quality" value="90" checked>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-quality" value="90">
                             High (90%)
                         </label>
-                        <label class="radio-option">
-                            <input type="radio" name="photo-quality" value="70">
+                        <label class="radio-option selected">
+                            <input type="radio" name="photo-quality" value="70" checked>
                             Medium (70%)
                         </label>
                         <label class="radio-option">
@@ -525,16 +528,16 @@
                 <div class="settings-group">
                     <label class="settings-label">Resize</label>
                     <div class="radio-group" id="photo-size">
-                        <label class="radio-option selected">
-                            <input type="radio" name="photo-size" value="original" checked>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-size" value="original">
                             Original
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="photo-size" value="2000">
                             2000px
                         </label>
-                        <label class="radio-option">
-                            <input type="radio" name="photo-size" value="1500">
+                        <label class="radio-option selected">
+                            <input type="radio" name="photo-size" value="1500" checked>
                             1500px
                         </label>
                         <label class="radio-option">
@@ -624,12 +627,12 @@
                 <div class="settings-group">
                     <label class="settings-label">Quality Preset</label>
                     <div class="radio-group" id="video-quality">
-                        <label class="radio-option selected">
-                            <input type="radio" name="video-quality" value="high" checked>
+                        <label class="radio-option">
+                            <input type="radio" name="video-quality" value="high">
                             High
                         </label>
-                        <label class="radio-option">
-                            <input type="radio" name="video-quality" value="medium">
+                        <label class="radio-option selected">
+                            <input type="radio" name="video-quality" value="medium" checked>
                             Medium
                         </label>
                         <label class="radio-option">
@@ -643,16 +646,16 @@
                 <div class="settings-group">
                     <label class="settings-label">Resolution</label>
                     <div class="radio-group" id="video-resolution">
-                        <label class="radio-option selected">
-                            <input type="radio" name="video-resolution" value="original" checked>
+                        <label class="radio-option">
+                            <input type="radio" name="video-resolution" value="original">
                             Original
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="video-resolution" value="1080">
                             1080p
                         </label>
-                        <label class="radio-option">
-                            <input type="radio" name="video-resolution" value="720">
+                        <label class="radio-option selected">
+                            <input type="radio" name="video-resolution" value="720" checked>
                             720p
                         </label>
                         <label class="radio-option">
@@ -724,6 +727,105 @@
         let ffmpeg = null;
         let ffmpegLoaded = false;
 
+        // 설정 저장/불러오기
+        const settings = {
+            // 기본값 설정
+            defaults: {
+                photo: {
+                    quality: '70',  // 70%가 기본
+                    size: '1500',    // 1500px가 기본
+                    format: 'jpeg'
+                },
+                video: {
+                    quality: 'medium',  // Medium이 기본
+                    resolution: '720',  // 720p가 기본
+                    removeAudio: false
+                }
+            },
+            
+            // localStorage에서 설정 불러오기
+            load: function() {
+                const saved = localStorage.getItem('ohotoro-settings');
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+                return this.defaults;
+            },
+            
+            // localStorage에 설정 저장
+            save: function(type, key, value) {
+                const current = this.load();
+                if (!current[type]) current[type] = {};
+                current[type][key] = value;
+                localStorage.setItem('ohotoro-settings', JSON.stringify(current));
+            },
+            
+            // 설정 적용
+            apply: function() {
+                const saved = this.load();
+                
+                // Photo 설정 적용
+                const photoQuality = document.querySelector(`input[name="photo-quality"][value="${saved.photo.quality}"]`);
+                if (photoQuality) {
+                    photoQuality.checked = true;
+                    photoQuality.closest('.radio-option').classList.add('selected');
+                    // 다른 옵션 선택 해제
+                    document.querySelectorAll('input[name="photo-quality"]').forEach(input => {
+                        if (input !== photoQuality) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
+                    });
+                }
+                
+                const photoSize = document.querySelector(`input[name="photo-size"][value="${saved.photo.size}"]`);
+                if (photoSize) {
+                    photoSize.checked = true;
+                    photoSize.closest('.radio-option').classList.add('selected');
+                    document.querySelectorAll('input[name="photo-size"]').forEach(input => {
+                        if (input !== photoSize) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
+                    });
+                }
+                
+                const photoFormat = document.querySelector(`input[name="photo-format"][value="${saved.photo.format}"]`);
+                if (photoFormat) {
+                    photoFormat.checked = true;
+                    photoFormat.closest('.radio-option').classList.add('selected');
+                    document.querySelectorAll('input[name="photo-format"]').forEach(input => {
+                        if (input !== photoFormat) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
+                    });
+                }
+                
+                // Video 설정 적용
+                const videoQuality = document.querySelector(`input[name="video-quality"][value="${saved.video.quality}"]`);
+                if (videoQuality) {
+                    videoQuality.checked = true;
+                    videoQuality.closest('.radio-option').classList.add('selected');
+                    document.querySelectorAll('input[name="video-quality"]').forEach(input => {
+                        if (input !== videoQuality) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
+                    });
+                }
+                
+                const videoResolution = document.querySelector(`input[name="video-resolution"][value="${saved.video.resolution}"]`);
+                if (videoResolution) {
+                    videoResolution.checked = true;
+                    videoResolution.closest('.radio-option').classList.add('selected');
+                    document.querySelectorAll('input[name="video-resolution"]').forEach(input => {
+                        if (input !== videoResolution) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
+                    });
+                }
+                
+                document.getElementById('remove-audio').checked = saved.video.removeAudio;
+            }
+        };
+
         // 탭 전환
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -739,7 +841,7 @@
             });
         });
 
-        // 라디오 버튼 스타일링
+        // 라디오 버튼 스타일링 및 설정 저장
         document.querySelectorAll('.radio-option').forEach(option => {
             option.addEventListener('click', function() {
                 // 같은 그룹의 다른 옵션들 비활성화
@@ -751,16 +853,38 @@
                 this.classList.add('selected');
                 this.querySelector('input').checked = true;
 
-                // Custom size 입력 표시/숨기기
-                if (groupName === 'photo-size') {
+                // 설정 저장
+                const input = this.querySelector('input');
+                const value = input.value;
+                
+                // Photo 설정 저장
+                if (groupName === 'photo-quality') {
+                    settings.save('photo', 'quality', value);
+                } else if (groupName === 'photo-size') {
+                    settings.save('photo', 'size', value);
+                    // Custom size 입력 표시/숨기기
                     const customInput = document.getElementById('photo-custom-size');
-                    if (this.querySelector('input').value === 'custom') {
+                    if (value === 'custom') {
                         customInput.classList.add('active');
                     } else {
                         customInput.classList.remove('active');
                     }
+                } else if (groupName === 'photo-format') {
+                    settings.save('photo', 'format', value);
+                }
+                
+                // Video 설정 저장
+                else if (groupName === 'video-quality') {
+                    settings.save('video', 'quality', value);
+                } else if (groupName === 'video-resolution') {
+                    settings.save('video', 'resolution', value);
                 }
             });
+        });
+
+        // 체크박스 변경 시 설정 저장
+        document.getElementById('remove-audio').addEventListener('change', function() {
+            settings.save('video', 'removeAudio', this.checked);
         });
 
         // ============= PHOTO 처리 =============
@@ -901,7 +1025,7 @@
                         let width = img.width;
                         let height = img.height;
                         
-                        if (maxSize && maxSize !== 'original') {
+                        if (maxSize && maxSize !== null) {
                             // 가로와 세로 중 큰 값을 기준으로 비율 계산
                             if (width > height) {
                                 // 가로가 더 긴 경우
@@ -1288,8 +1412,19 @@
 
         // 페이지 로드시 초기화
         window.addEventListener('load', () => {
-            // 기본값 설정 확인
+            // 저장된 설정 불러오기 및 적용
+            settings.apply();
+            
             console.log('OHOTORO COMPRESSOR loaded');
+            console.log('Settings loaded:', settings.load());
+        });
+
+        // 설정 리셋 버튼
+        document.getElementById('reset-settings').addEventListener('click', () => {
+            if (confirm('Reset all settings to default?')) {
+                localStorage.removeItem('ohotoro-settings');
+                location.reload();
+            }
         });
     </script>
 </body>

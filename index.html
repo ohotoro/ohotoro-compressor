@@ -1305,14 +1305,17 @@
                 ffmpegCommand.push('-crf', '18');
             }
             
-            // 해상도 설정
+            // 해상도 설정 - 비율 유지하며 리사이징
             if (resolution !== 'original') {
-                const heights = {
-                    '1080': '1920:1080',
-                    '720': '1280:720',
-                    '480': '854:480'
-                };
-                ffmpegCommand.push('-vf', `scale=${heights[resolution]}`);
+                // -1을 사용하면 비율에 맞춰 자동 계산
+                // pad 필터로 비율이 맞지 않을 경우를 대비
+                if (resolution === '1080') {
+                    ffmpegCommand.push('-vf', 'scale=-2:1080');
+                } else if (resolution === '720') {
+                    ffmpegCommand.push('-vf', 'scale=-2:720');
+                } else if (resolution === '480') {
+                    ffmpegCommand.push('-vf', 'scale=-2:480');
+                }
             }
             
             // 오디오 제거

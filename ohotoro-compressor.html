@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OHOTORO COMPRESSOR</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js"></script>
+    
+    <style>
+        /* 기본 리셋 및 폰트 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            background: #fafafa;
+            color: #111;
+            line-height: 1.6;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+        }
+
+        /* 메인 컨테이너 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* 헤더 */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 10px;
+            color: #666;
+            letter-spacing: 0.15em;
+        }
+
+        /* 탭 네비게이션 */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 12px 40px;
+            background: none;
+            border: none;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: #111;
+        }
+
+        .tab.active {
+            color: #111;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #111;
+        }
+
+        /* 탭 콘텐츠 */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 업로드 영역 */
+        .upload-area {
+            border: 1px dashed #d0d0d0;
+            border-radius: 0;
+            padding: 80px 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #fff;
+            margin-bottom: 40px;
+        }
+
+        .upload-area:hover {
+            border-color: #111;
+            background: #fafafa;
+        }
+
+        .upload-area.dragover {
+            border-color: #111;
+            background: #f5f5f5;
+        }
+
+        .upload-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+            color: #999;
+        }
+
+        .upload-text {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            font-size: 10px;
+            color: #999;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* 설정 패널 */
+        .settings-panel {
+            background: #fff;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .settings-group {
+            margin-bottom: 30px;
+        }
+
+        .settings-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #666;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* 라디오 버튼 그룹 */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 16px;
+            border: 1px solid #d0d0d0;
+            font-size: 11px;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .radio-option:hover {
+            border-color: #111;
+        }
+
+        .radio-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-option.selected {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+        }
+
+        /* 커스텀 입력 */
+        .custom-input {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .custom-input.active {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .custom-input input {
+            padding: 8px 12px;
+            border: 1px solid #d0d0d0;
+            font-size: 11px;
+            width: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        .custom-input input:focus {
+            outline: none;
+            border-color: #111;
+        }
+
+        .custom-input span {
+            font-size: 10px;
+            color: #666;
+        }
+
+        /* 체크박스 */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            font-size: 11px;
+            color: #333;
+        }
+
+        /* 파일 리스트 */
+        .file-list {
+            margin-bottom: 30px;
+        }
+
+        .file-item {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            border-color: #d0d0d0;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #111;
+        }
+
+        .file-size {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .file-status {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .file-status.processing {
+            background: #111;
+            color: #fff;
+        }
+
+        .file-status.complete {
+            background: #4CAF50;
+            color: #fff;
+        }
+
+        .file-status.error {
+            background: #f44336;
+            color: #fff;
+        }
+
+        /* 진행률 바 */
+        .progress-bar {
+            display: none;
+            height: 1px;
+            background: #e0e0e0;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar.active {
+            display: block;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #111;
+            transition: width 0.3s ease;
+            width: 0;
+        }
+
+        /* 버튼 */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 12px 40px;
+            background: #fff;
+            border: 1px solid #111;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #111;
+            color: #fff;
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn.primary {
+            background: #111;
+            color: #fff;
+        }
+
+        .btn.primary:hover {
+            background: #333;
+            border-color: #333;
+        }
+
+        /* 통계 정보 */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 40px 0;
+            padding: 30px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 300;
+            color: #111;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #999;
+        }
+
+        /* 로딩 인디케이터 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #e0e0e0;
+            border-top-color: #111;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #666;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+
+            .tab {
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <header>
+            <h1>OHOTORO COMPRESSOR</h1>
+            <div class="subtitle">Photo & Video Optimization</div>
+        </header>
+
+        <!-- 탭 네비게이션 -->
+        <div class="tabs">
+            <button class="tab active" data-tab="photo">Photo</button>
+            <button class="tab" data-tab="video">Video</button>
+        </div>
+
+        <!-- Photo 탭 콘텐츠 -->
+        <div id="photo-tab" class="tab-content active">
+            <!-- 업로드 영역 -->
+            <div class="upload-area" id="photo-upload-area">
+                <input type="file" id="photo-input" multiple accept="image/*">
+                <div class="upload-icon">📷</div>
+                <div class="upload-text">Drop your images here</div>
+                <div class="upload-subtext">or click to browse (JPG, PNG, WEBP)</div>
+            </div>
+
+            <!-- 설정 패널 -->
+            <div class="settings-panel" style="display: none;" id="photo-settings">
+                <!-- 품질 설정 -->
+                <div class="settings-group">
+                    <label class="settings-label">Quality</label>
+                    <div class="radio-group" id="photo-quality">
+                        <label class="radio-option selected">
+                            <input type="radio" name="photo-quality" value="90" checked>
+                            High (90%)
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-quality" value="70">
+                            Medium (70%)
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-quality" value="50">
+                            Low (50%)
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-quality" value="30">
+                            Web (30%)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 크기 설정 -->
+                <div class="settings-group">
+                    <label class="settings-label">Resize</label>
+                    <div class="radio-group" id="photo-size">
+                        <label class="radio-option selected">
+                            <input type="radio" name="photo-size" value="original" checked>
+                            Original
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-size" value="2000">
+                            2000px
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-size" value="1500">
+                            1500px
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-size" value="1000">
+                            1000px
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-size" value="custom">
+                            Custom
+                        </label>
+                    </div>
+                    <div class="custom-input" id="photo-custom-size">
+                        <input type="number" id="photo-custom-value" placeholder="800" min="100" max="5000">
+                        <span>pixels (max width/height)</span>
+                    </div>
+                </div>
+
+                <!-- 포맷 설정 -->
+                <div class="settings-group">
+                    <label class="settings-label">Output Format</label>
+                    <div class="radio-group" id="photo-format">
+                        <label class="radio-option selected">
+                            <input type="radio" name="photo-format" value="jpeg" checked>
+                            JPEG
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-format" value="png">
+                            PNG
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-format" value="webp">
+                            WebP
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 파일 리스트 -->
+            <div class="file-list" id="photo-file-list" style="display: none;"></div>
+
+            <!-- 진행률 바 -->
+            <div class="progress-bar" id="photo-progress">
+                <div class="progress-fill"></div>
+            </div>
+
+            <!-- 통계 -->
+            <div class="stats" id="photo-stats" style="display: none;">
+                <div class="stat-item">
+                    <div class="stat-value" id="photo-total-files">0</div>
+                    <div class="stat-label">Total Files</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="photo-original-size">0 MB</div>
+                    <div class="stat-label">Original Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="photo-compressed-size">0 MB</div>
+                    <div class="stat-label">Compressed Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="photo-saved">0%</div>
+                    <div class="stat-label">Space Saved</div>
+                </div>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="button-group" id="photo-buttons" style="display: none;">
+                <button class="btn" id="photo-clear">Clear All</button>
+                <button class="btn primary" id="photo-process">Process Images</button>
+                <button class="btn primary" id="photo-download" style="display: none;">Download All</button>
+            </div>
+        </div>
+
+        <!-- Video 탭 콘텐츠 -->
+        <div id="video-tab" class="tab-content">
+            <!-- 업로드 영역 -->
+            <div class="upload-area" id="video-upload-area">
+                <input type="file" id="video-input" multiple accept="video/*">
+                <div class="upload-icon">🎬</div>
+                <div class="upload-text">Drop your videos here</div>
+                <div class="upload-subtext">or click to browse (MP4, MOV, AVI, max 100MB)</div>
+            </div>
+
+            <!-- 설정 패널 -->
+            <div class="settings-panel" style="display: none;" id="video-settings">
+                <!-- 품질 설정 -->
+                <div class="settings-group">
+                    <label class="settings-label">Quality Preset</label>
+                    <div class="radio-group" id="video-quality">
+                        <label class="radio-option selected">
+                            <input type="radio" name="video-quality" value="high" checked>
+                            High
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="video-quality" value="medium">
+                            Medium
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="video-quality" value="low">
+                            Low
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 해상도 설정 -->
+                <div class="settings-group">
+                    <label class="settings-label">Resolution</label>
+                    <div class="radio-group" id="video-resolution">
+                        <label class="radio-option selected">
+                            <input type="radio" name="video-resolution" value="original" checked>
+                            Original
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="video-resolution" value="1080">
+                            1080p
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="video-resolution" value="720">
+                            720p
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="video-resolution" value="480">
+                            480p
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 오디오 설정 -->
+                <div class="settings-group">
+                    <label class="settings-label">Audio Options</label>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="remove-audio">
+                        <label for="remove-audio" class="checkbox-label">Remove audio track</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 파일 리스트 -->
+            <div class="file-list" id="video-file-list" style="display: none;"></div>
+
+            <!-- 진행률 바 -->
+            <div class="progress-bar" id="video-progress">
+                <div class="progress-fill"></div>
+            </div>
+
+            <!-- 로딩 인디케이터 -->
+            <div class="loading" id="video-loading">
+                <div class="spinner"></div>
+                <div class="loading-text">Processing videos...</div>
+            </div>
+
+            <!-- 통계 -->
+            <div class="stats" id="video-stats" style="display: none;">
+                <div class="stat-item">
+                    <div class="stat-value" id="video-total-files">0</div>
+                    <div class="stat-label">Total Files</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="video-original-size">0 MB</div>
+                    <div class="stat-label">Original Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="video-compressed-size">0 MB</div>
+                    <div class="stat-label">Compressed Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="video-saved">0%</div>
+                    <div class="stat-label">Space Saved</div>
+                </div>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="button-group" id="video-buttons" style="display: none;">
+                <button class="btn" id="video-clear">Clear All</button>
+                <button class="btn primary" id="video-process">Process Videos</button>
+                <button class="btn primary" id="video-download" style="display: none;">Download All</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let photoFiles = [];
+        let videoFiles = [];
+        let processedPhotos = [];
+        let processedVideos = [];
+        let ffmpeg = null;
+        let ffmpegLoaded = false;
+
+        // 탭 전환
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 탭 활성화 상태 변경
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // 콘텐츠 전환
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+
+        // 라디오 버튼 스타일링
+        document.querySelectorAll('.radio-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // 같은 그룹의 다른 옵션들 비활성화
+                const groupName = this.querySelector('input').name;
+                document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => {
+                    input.closest('.radio-option').classList.remove('selected');
+                });
+                // 현재 옵션 활성화
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+
+                // Custom size 입력 표시/숨기기
+                if (groupName === 'photo-size') {
+                    const customInput = document.getElementById('photo-custom-size');
+                    if (this.querySelector('input').value === 'custom') {
+                        customInput.classList.add('active');
+                    } else {
+                        customInput.classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        // ============= PHOTO 처리 =============
+
+        // Photo 업로드 영역
+        const photoUploadArea = document.getElementById('photo-upload-area');
+        const photoInput = document.getElementById('photo-input');
+
+        // 클릭으로 파일 선택
+        photoUploadArea.addEventListener('click', () => {
+            photoInput.click();
+        });
+
+        // 드래그 앤 드롭
+        photoUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            photoUploadArea.classList.add('dragover');
+        });
+
+        photoUploadArea.addEventListener('dragleave', () => {
+            photoUploadArea.classList.remove('dragover');
+        });
+
+        photoUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            photoUploadArea.classList.remove('dragover');
+            handlePhotoFiles(e.dataTransfer.files);
+        });
+
+        // 파일 입력 변경
+        photoInput.addEventListener('change', (e) => {
+            handlePhotoFiles(e.target.files);
+        });
+
+        // Photo 파일 처리
+        function handlePhotoFiles(files) {
+            photoFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+            
+            if (photoFiles.length === 0) {
+                alert('Please select valid image files');
+                return;
+            }
+
+            // UI 업데이트
+            document.getElementById('photo-settings').style.display = 'block';
+            document.getElementById('photo-file-list').style.display = 'block';
+            document.getElementById('photo-buttons').style.display = 'flex';
+            
+            // 파일 리스트 표시
+            displayPhotoFiles();
+        }
+
+        // Photo 파일 리스트 표시
+        function displayPhotoFiles() {
+            const fileList = document.getElementById('photo-file-list');
+            fileList.innerHTML = '';
+            
+            photoFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${formatFileSize(file.size)}</div>
+                    </div>
+                    <div class="file-status" id="photo-status-${index}">Ready</div>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        // Photo 처리 버튼
+        document.getElementById('photo-process').addEventListener('click', async () => {
+            const quality = parseInt(document.querySelector('input[name="photo-quality"]:checked').value);
+            const sizeOption = document.querySelector('input[name="photo-size"]:checked').value;
+            const format = document.querySelector('input[name="photo-format"]:checked').value;
+            
+            let maxSize = null;
+            if (sizeOption === 'custom') {
+                maxSize = parseInt(document.getElementById('photo-custom-value').value) || 1000;
+            } else if (sizeOption !== 'original') {
+                maxSize = parseInt(sizeOption);
+            }
+
+            // 진행률 표시
+            const progressBar = document.getElementById('photo-progress');
+            progressBar.classList.add('active');
+            
+            processedPhotos = [];
+            let totalOriginalSize = 0;
+            let totalCompressedSize = 0;
+
+            for (let i = 0; i < photoFiles.length; i++) {
+                const file = photoFiles[i];
+                const statusElement = document.getElementById(`photo-status-${i}`);
+                statusElement.textContent = 'Processing';
+                statusElement.className = 'file-status processing';
+
+                try {
+                    const processed = await processImage(file, quality, maxSize, format);
+                    processedPhotos.push(processed);
+                    
+                    totalOriginalSize += file.size;
+                    totalCompressedSize += processed.blob.size;
+                    
+                    statusElement.textContent = 'Complete';
+                    statusElement.className = 'file-status complete';
+                } catch (error) {
+                    console.error('Error processing image:', error);
+                    statusElement.textContent = 'Error';
+                    statusElement.className = 'file-status error';
+                }
+
+                // 진행률 업데이트
+                const progress = ((i + 1) / photoFiles.length) * 100;
+                progressBar.querySelector('.progress-fill').style.width = progress + '%';
+            }
+
+            // 통계 표시
+            displayPhotoStats(totalOriginalSize, totalCompressedSize);
+            
+            // 다운로드 버튼 표시
+            document.getElementById('photo-download').style.display = 'inline-block';
+            progressBar.classList.remove('active');
+        });
+
+        // 이미지 처리 함수
+        async function processImage(file, quality, maxSize, format) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // 크기 계산
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (maxSize) {
+                            const ratio = Math.min(maxSize / width, maxSize / height);
+                            if (ratio < 1) {
+                                width *= ratio;
+                                height *= ratio;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // 이미지 그리기
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // 포맷별 MIME 타입 설정
+                        let mimeType = 'image/jpeg';
+                        if (format === 'png') mimeType = 'image/png';
+                        if (format === 'webp') mimeType = 'image/webp';
+                        
+                        // Blob으로 변환
+                        canvas.toBlob((blob) => {
+                            // 파일명 생성
+                            const extension = format === 'jpeg' ? 'jpg' : format;
+                            const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                            const fileName = `${baseName}_compressed.${extension}`;
+                            
+                            resolve({
+                                blob: blob,
+                                name: fileName,
+                                originalName: file.name
+                            });
+                        }, mimeType, quality / 100);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Photo 통계 표시
+        function displayPhotoStats(originalSize, compressedSize) {
+            document.getElementById('photo-stats').style.display = 'flex';
+            document.getElementById('photo-total-files').textContent = photoFiles.length;
+            document.getElementById('photo-original-size').textContent = formatFileSize(originalSize);
+            document.getElementById('photo-compressed-size').textContent = formatFileSize(compressedSize);
+            
+            const savedPercentage = Math.round((1 - compressedSize / originalSize) * 100);
+            document.getElementById('photo-saved').textContent = savedPercentage + '%';
+        }
+
+        // Photo 다운로드
+        document.getElementById('photo-download').addEventListener('click', async () => {
+            if (processedPhotos.length === 0) return;
+            
+            if (processedPhotos.length === 1) {
+                // 단일 파일 다운로드
+                downloadFile(processedPhotos[0].blob, processedPhotos[0].name);
+            } else {
+                // ZIP으로 다운로드
+                const zip = new JSZip();
+                processedPhotos.forEach(photo => {
+                    zip.file(photo.name, photo.blob);
+                });
+                
+                const zipBlob = await zip.generateAsync({type: 'blob'});
+                downloadFile(zipBlob, 'compressed_photos.zip');
+            }
+        });
+
+        // Photo 초기화
+        document.getElementById('photo-clear').addEventListener('click', () => {
+            photoFiles = [];
+            processedPhotos = [];
+            document.getElementById('photo-settings').style.display = 'none';
+            document.getElementById('photo-file-list').style.display = 'none';
+            document.getElementById('photo-stats').style.display = 'none';
+            document.getElementById('photo-buttons').style.display = 'none';
+            document.getElementById('photo-download').style.display = 'none';
+            photoInput.value = '';
+        });
+
+        // ============= VIDEO 처리 =============
+
+        // FFmpeg 초기화
+        async function loadFFmpeg() {
+            if (ffmpegLoaded) return;
+            
+            const loading = document.getElementById('video-loading');
+            loading.classList.add('active');
+            loading.querySelector('.loading-text').textContent = 'Loading video processor...';
+            
+            try {
+                ffmpeg = FFmpeg.createFFmpeg({
+                    log: false,
+                    corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js'
+                });
+                
+                await ffmpeg.load();
+                ffmpegLoaded = true;
+                console.log('FFmpeg loaded successfully');
+            } catch (error) {
+                console.error('Failed to load FFmpeg:', error);
+                alert('Failed to load video processor. Video compression may not work.');
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+
+        // Video 업로드 영역
+        const videoUploadArea = document.getElementById('video-upload-area');
+        const videoInput = document.getElementById('video-input');
+
+        // 클릭으로 파일 선택
+        videoUploadArea.addEventListener('click', () => {
+            videoInput.click();
+        });
+
+        // 드래그 앤 드롭
+        videoUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            videoUploadArea.classList.add('dragover');
+        });
+
+        videoUploadArea.addEventListener('dragleave', () => {
+            videoUploadArea.classList.remove('dragover');
+        });
+
+        videoUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            videoUploadArea.classList.remove('dragover');
+            handleVideoFiles(e.dataTransfer.files);
+        });
+
+        // 파일 입력 변경
+        videoInput.addEventListener('change', (e) => {
+            handleVideoFiles(e.target.files);
+        });
+
+        // Video 파일 처리
+        async function handleVideoFiles(files) {
+            videoFiles = Array.from(files).filter(file => {
+                if (!file.type.startsWith('video/')) return false;
+                if (file.size > 100 * 1024 * 1024) { // 100MB 제한
+                    alert(`${file.name} is larger than 100MB. Please select a smaller file.`);
+                    return false;
+                }
+                return true;
+            });
+            
+            if (videoFiles.length === 0) {
+                alert('Please select valid video files (max 100MB each)');
+                return;
+            }
+
+            // FFmpeg 로드
+            await loadFFmpeg();
+
+            // UI 업데이트
+            document.getElementById('video-settings').style.display = 'block';
+            document.getElementById('video-file-list').style.display = 'block';
+            document.getElementById('video-buttons').style.display = 'flex';
+            
+            // 파일 리스트 표시
+            displayVideoFiles();
+        }
+
+        // Video 파일 리스트 표시
+        function displayVideoFiles() {
+            const fileList = document.getElementById('video-file-list');
+            fileList.innerHTML = '';
+            
+            videoFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${formatFileSize(file.size)}</div>
+                    </div>
+                    <div class="file-status" id="video-status-${index}">Ready</div>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        // Video 처리 버튼
+        document.getElementById('video-process').addEventListener('click', async () => {
+            if (!ffmpegLoaded) {
+                alert('Video processor is not loaded. Please try again.');
+                return;
+            }
+
+            const quality = document.querySelector('input[name="video-quality"]:checked').value;
+            const resolution = document.querySelector('input[name="video-resolution"]:checked').value;
+            const removeAudio = document.getElementById('remove-audio').checked;
+
+            // 로딩 표시
+            const loading = document.getElementById('video-loading');
+            const progressBar = document.getElementById('video-progress');
+            progressBar.classList.add('active');
+            
+            processedVideos = [];
+            let totalOriginalSize = 0;
+            let totalCompressedSize = 0;
+
+            for (let i = 0; i < videoFiles.length; i++) {
+                const file = videoFiles[i];
+                const statusElement = document.getElementById(`video-status-${i}`);
+                statusElement.textContent = 'Processing';
+                statusElement.className = 'file-status processing';
+                
+                loading.classList.add('active');
+                loading.querySelector('.loading-text').textContent = `Processing ${file.name}...`;
+
+                try {
+                    const processed = await processVideo(file, quality, resolution, removeAudio);
+                    processedVideos.push(processed);
+                    
+                    totalOriginalSize += file.size;
+                    totalCompressedSize += processed.blob.size;
+                    
+                    statusElement.textContent = 'Complete';
+                    statusElement.className = 'file-status complete';
+                } catch (error) {
+                    console.error('Error processing video:', error);
+                    statusElement.textContent = 'Error';
+                    statusElement.className = 'file-status error';
+                }
+
+                // 진행률 업데이트
+                const progress = ((i + 1) / videoFiles.length) * 100;
+                progressBar.querySelector('.progress-fill').style.width = progress + '%';
+            }
+
+            loading.classList.remove('active');
+            
+            // 통계 표시
+            displayVideoStats(totalOriginalSize, totalCompressedSize);
+            
+            // 다운로드 버튼 표시
+            document.getElementById('video-download').style.display = 'inline-block';
+            progressBar.classList.remove('active');
+        });
+
+        // 비디오 처리 함수 (간소화 버전)
+        async function processVideo(file, quality, resolution, removeAudio) {
+            // FFmpeg.wasm을 사용한 실제 비디오 압축은 복잡하므로
+            // 여기서는 기본 구조만 제공
+            // 실제 구현시 FFmpeg 명령어를 조합하여 처리
+            
+            const inputName = 'input.mp4';
+            const outputName = 'output.mp4';
+            
+            // 파일을 FFmpeg 파일 시스템에 쓰기
+            const data = new Uint8Array(await file.arrayBuffer());
+            ffmpeg.FS('writeFile', inputName, data);
+            
+            // FFmpeg 명령어 구성
+            let ffmpegCommand = ['-i', inputName];
+            
+            // 품질 설정
+            if (quality === 'low') {
+                ffmpegCommand.push('-crf', '28');
+            } else if (quality === 'medium') {
+                ffmpegCommand.push('-crf', '23');
+            } else {
+                ffmpegCommand.push('-crf', '18');
+            }
+            
+            // 해상도 설정
+            if (resolution !== 'original') {
+                const heights = {
+                    '1080': '1920:1080',
+                    '720': '1280:720',
+                    '480': '854:480'
+                };
+                ffmpegCommand.push('-vf', `scale=${heights[resolution]}`);
+            }
+            
+            // 오디오 제거
+            if (removeAudio) {
+                ffmpegCommand.push('-an');
+            }
+            
+            // 출력 설정
+            ffmpegCommand.push('-c:v', 'libx264', '-preset', 'medium', outputName);
+            
+            // FFmpeg 실행
+            await ffmpeg.run(...ffmpegCommand);
+            
+            // 결과 읽기
+            const outputData = ffmpeg.FS('readFile', outputName);
+            const blob = new Blob([outputData.buffer], { type: 'video/mp4' });
+            
+            // 파일 시스템 정리
+            ffmpeg.FS('unlink', inputName);
+            ffmpeg.FS('unlink', outputName);
+            
+            // 파일명 생성
+            const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+            const fileName = `${baseName}_compressed.mp4`;
+            
+            return {
+                blob: blob,
+                name: fileName,
+                originalName: file.name
+            };
+        }
+
+        // Video 통계 표시
+        function displayVideoStats(originalSize, compressedSize) {
+            document.getElementById('video-stats').style.display = 'flex';
+            document.getElementById('video-total-files').textContent = videoFiles.length;
+            document.getElementById('video-original-size').textContent = formatFileSize(originalSize);
+            document.getElementById('video-compressed-size').textContent = formatFileSize(compressedSize);
+            
+            const savedPercentage = Math.round((1 - compressedSize / originalSize) * 100);
+            document.getElementById('video-saved').textContent = savedPercentage + '%';
+        }
+
+        // Video 다운로드
+        document.getElementById('video-download').addEventListener('click', async () => {
+            if (processedVideos.length === 0) return;
+            
+            if (processedVideos.length === 1) {
+                // 단일 파일 다운로드
+                downloadFile(processedVideos[0].blob, processedVideos[0].name);
+            } else {
+                // ZIP으로 다운로드
+                const zip = new JSZip();
+                processedVideos.forEach(video => {
+                    zip.file(video.name, video.blob);
+                });
+                
+                const zipBlob = await zip.generateAsync({type: 'blob'});
+                downloadFile(zipBlob, 'compressed_videos.zip');
+            }
+        });
+
+        // Video 초기화
+        document.getElementById('video-clear').addEventListener('click', () => {
+            videoFiles = [];
+            processedVideos = [];
+            document.getElementById('video-settings').style.display = 'none';
+            document.getElementById('video-file-list').style.display = 'none';
+            document.getElementById('video-stats').style.display = 'none';
+            document.getElementById('video-buttons').style.display = 'none';
+            document.getElementById('video-download').style.display = 'none';
+            videoInput.value = '';
+        });
+
+        // ============= 유틸리티 함수 =============
+
+        // 파일 크기 포맷
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // 파일 다운로드
+        function downloadFile(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 페이지 로드시 초기화
+        window.addEventListener('load', () => {
+            // 기본값 설정 확인
+            console.log('OHOTORO COMPRESSOR loaded');
+        });
+    </script>
+</body>
+</html>

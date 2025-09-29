@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OHOTORO COMPRESSOR!</title>
+    <title>OHOTORO HORIE Optimizer</title>
     
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -20,7 +20,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-            background: #fafafa;
+            background: #f6f6f6;
             color: #111;
             line-height: 1.6;
             font-size: 13px;
@@ -59,7 +59,7 @@
             display: flex;
             justify-content: center;
             margin-bottom: 50px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e6e6e6;
         }
 
         .tab {
@@ -110,7 +110,7 @@
 
         /* 업로드 영역 */
         .upload-area {
-            border: 1px dashed #d0d0d0;
+            border: 1px dashed #e6e6e6;
             border-radius: 0;
             padding: 80px 40px;
             text-align: center;
@@ -121,7 +121,7 @@
         }
 
         .upload-area:hover {
-            border-color: #111;
+            border-color: #999;
             background: #fafafa;
         }
 
@@ -158,7 +158,7 @@
             background: #fff;
             padding: 40px;
             margin-bottom: 30px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #e6e6e6;
         }
 
         .settings-group {
@@ -189,14 +189,14 @@
             position: relative;
             cursor: pointer;
             padding: 8px 16px;
-            border: 1px solid #d0d0d0;
+            border: 1px solid #e6e6e6;
             font-size: 11px;
             transition: all 0.3s ease;
             background: #fff;
         }
 
         .radio-option:hover {
-            border-color: #111;
+            border-color: #999;
         }
 
         .radio-option input {
@@ -224,7 +224,7 @@
 
         .custom-input input {
             padding: 8px 12px;
-            border: 1px solid #d0d0d0;
+            border: 1px solid #e6e6e6;
             font-size: 11px;
             width: 100px;
             transition: border-color 0.3s ease;
@@ -232,7 +232,7 @@
 
         .custom-input input:focus {
             outline: none;
-            border-color: #111;
+            border-color: #999;
         }
 
         .custom-input span {
@@ -266,7 +266,7 @@
 
         .file-item {
             background: #fff;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #e6e6e6;
             padding: 20px;
             margin-bottom: 12px;
             display: flex;
@@ -300,29 +300,29 @@
             letter-spacing: 0.1em;
             padding: 4px 12px;
             background: #f5f5f5;
-            color: #666;
+            color: #999;
         }
 
         .file-status.processing {
-            background: #111;
-            color: #fff;
+            background: #f5f5f5;
+            color: #111;
         }
 
         .file-status.complete {
-            background: #4CAF50;
-            color: #fff;
+            background: #f0f0f0;
+            color: #666;
         }
 
         .file-status.error {
-            background: #f44336;
-            color: #fff;
+            background: #f5f5f5;
+            color: #999;
         }
 
         /* 진행률 바 */
         .progress-bar {
             display: none;
             height: 1px;
-            background: #e0e0e0;
+            background: #e6e6e6;
             margin: 30px 0;
             overflow: hidden;
         }
@@ -333,8 +333,8 @@
 
         .progress-fill {
             height: 100%;
-            background: #111;
-            transition: width 0.3s ease;
+            background: #999;
+            transition: width 0.25s ease;
             width: 0;
         }
 
@@ -349,7 +349,7 @@
         .btn {
             padding: 12px 40px;
             background: #fff;
-            border: 1px solid #111;
+            border: 1px solid #e6e6e6;
             font-size: 10px;
             letter-spacing: 0.15em;
             text-transform: uppercase;
@@ -358,8 +358,8 @@
         }
 
         .btn:hover {
-            background: #111;
-            color: #fff;
+            background: #fafafa;
+            border-color: #999;
         }
 
         .btn:disabled {
@@ -370,6 +370,7 @@
         .btn.primary {
             background: #111;
             color: #fff;
+            border-color: #111;
         }
 
         .btn.primary:hover {
@@ -385,7 +386,7 @@
             margin: 40px 0;
             padding: 30px;
             background: #fff;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #e6e6e6;
         }
 
         .stat-item {
@@ -420,8 +421,8 @@
         .spinner {
             width: 20px;
             height: 20px;
-            border: 1px solid #e0e0e0;
-            border-top-color: #111;
+            border: 1px solid #e6e6e6;
+            border-top-color: #999;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 16px;
@@ -429,6 +430,44 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* 성공 메시지 */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(17,17,17,0.9);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: 400;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* 라벨 툴팁 스타일 */
+        .settings-label[title] {
+            cursor: help;
+            position: relative;
+        }
+
+        /* 모션 선호도 존중 */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
         }
 
         .loading-text {
@@ -450,7 +489,7 @@
             }
 
             .tab {
-                border-bottom: 1px solid #e0e0e0;
+                border-bottom: 1px solid #e6e6e6;
             }
 
             .radio-group {
@@ -476,17 +515,29 @@
     <div class="container">
         <!-- 헤더 -->
         <header>
-            <h1>OHOTORO COMPRESSOR</h1>
-            <div class="subtitle">Photo & Video Optimization</div>
-            <button id="reset-settings" style="margin-top: 20px; padding: 6px 16px; background: none; border: 1px solid #d0d0d0; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: #999; transition: all 0.3s ease;" 
+            <div style="position: absolute; top: 20px; right: 40px;">
+                <a href="https://admin.cre.ma/v2/review/products" target="_blank" 
+                   style="padding: 8px 20px; background: none; border: 1px solid #e6e6e6; color: #666; text-decoration: none; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.3s ease;"
+                   onmouseover="this.style.borderColor='#111'; this.style.color='#111';" 
+                   onmouseout="this.style.borderColor='#e6e6e6'; this.style.color='#666';">
+                    CREMA
+                </a>
+            </div>
+            
+            <h1 style="font-size: 11px;">OHOTORO HORIE</h1>
+            <div class="subtitle">Photo / Video Optimizer</div>
+            <div style="margin-top: 12px; font-size: 10px; color: #999; letter-spacing: 0.1em;">
+                <span id="team-message" style="transition: opacity 0.3s ease;">静かに整える。確かに進める。</span>
+            </div>
+            <button id="reset-settings" style="margin-top: 20px; padding: 6px 16px; background: none; border: 1px solid #e6e6e6; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: #999; transition: all 0.3s ease;" 
                 onmouseover="this.style.borderColor='#111'; this.style.color='#111';" 
-                onmouseout="this.style.borderColor='#d0d0d0'; this.style.color='#999';">Reset Settings</button>
+                onmouseout="this.style.borderColor='#e6e6e6'; this.style.color='#999';">設定を初期化</button>
         </header>
 
         <!-- 탭 네비게이션 -->
         <div class="tabs">
-            <button class="tab active" data-tab="photo">Photo</button>
-            <button class="tab" data-tab="video">Video</button>
+            <button class="tab active" data-tab="photo">画像</button>
+            <button class="tab" data-tab="video">動画</button>
         </div>
 
         <!-- Photo 탭 콘텐츠 -->
@@ -494,28 +545,29 @@
             <!-- 업로드 영역 -->
             <div class="upload-area" id="photo-upload-area">
                 <input type="file" id="photo-input" multiple accept="image/*">
-                <div class="upload-icon">📷</div>
-                <div class="upload-text">Drop your images here</div>
-                <div class="upload-subtext">or click to browse (JPG, PNG, WEBP)</div>
+                <div class="upload-icon" style="font-size: 24px; color: #ccc;">―</div>
+                <div class="upload-text">画像をここにドラッグ</div>
+                <div class="upload-subtext">クリックで選択</div>
+                <div style="margin-top: 12px; font-size: 10px; color: #ccc;">複数可</div>
             </div>
 
             <!-- 설정 패널 -->
             <div class="settings-panel" style="display: none;" id="photo-settings">
                 <!-- 품질 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label">Quality</label>
+                    <label class="settings-label">品質</label>
                     <div class="radio-group" id="photo-quality">
                         <label class="radio-option">
                             <input type="radio" name="photo-quality" value="90">
-                            High (90%)
+                            高 (90%)
                         </label>
                         <label class="radio-option selected">
                             <input type="radio" name="photo-quality" value="70" checked>
-                            Medium (70%)
+                            中 (70%)
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="photo-quality" value="50">
-                            Low (50%)
+                            低 (50%)
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="photo-quality" value="30">
@@ -526,11 +578,11 @@
 
                 <!-- 크기 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label">Resize</label>
+                    <label class="settings-label">サイズ</label>
                     <div class="radio-group" id="photo-size">
                         <label class="radio-option">
                             <input type="radio" name="photo-size" value="original">
-                            Original
+                            オリジナル
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="photo-size" value="2000">
@@ -546,18 +598,18 @@
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="photo-size" value="custom">
-                            Custom
+                            カスタム
                         </label>
                     </div>
                     <div class="custom-input" id="photo-custom-size">
                         <input type="number" id="photo-custom-value" placeholder="800" min="100" max="5000">
-                        <span>pixels (max width/height)</span>
+                        <span>px</span>
                     </div>
                 </div>
 
                 <!-- 포맷 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label">Output Format</label>
+                    <label class="settings-label">形式</label>
                     <div class="radio-group" id="photo-format">
                         <label class="radio-option selected">
                             <input type="radio" name="photo-format" value="jpeg" checked>
@@ -587,27 +639,31 @@
             <div class="stats" id="photo-stats" style="display: none;">
                 <div class="stat-item">
                     <div class="stat-value" id="photo-total-files">0</div>
-                    <div class="stat-label">Total Files</div>
+                    <div class="stat-label">ファイル数</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value" id="photo-original-size">0 MB</div>
-                    <div class="stat-label">Original Size</div>
+                    <div class="stat-label">元のサイズ</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value" id="photo-compressed-size">0 MB</div>
-                    <div class="stat-label">Compressed Size</div>
+                    <div class="stat-label">圧縮後</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value" id="photo-saved">0%</div>
-                    <div class="stat-label">Space Saved</div>
+                    <div class="stat-value" id="photo-saved" style="color: #666; font-weight: 400;">0%</div>
+                    <div class="stat-label">削減率</div>
                 </div>
             </div>
 
             <!-- 버튼 그룹 -->
             <div class="button-group" id="photo-buttons" style="display: none;">
-                <button class="btn" id="photo-clear">Clear All</button>
-                <button class="btn primary" id="photo-process">Process Images</button>
-                <button class="btn primary" id="photo-download" style="display: none;">Download All</button>
+                <button class="btn" id="photo-clear">全てクリア</button>
+                <button class="btn primary" id="photo-process">実行</button>
+                <button class="btn" id="photo-download" style="display: none; background: #111; color: #fff; border-color: #111;" 
+                    onmouseover="this.style.opacity='0.8';" 
+                    onmouseout="this.style.opacity='1';">
+                    一括ダウンロード
+                </button>
             </div>
         </div>
 
@@ -616,39 +672,40 @@
             <!-- 업로드 영역 -->
             <div class="upload-area" id="video-upload-area">
                 <input type="file" id="video-input" multiple accept="video/*">
-                <div class="upload-icon">🎬</div>
-                <div class="upload-text">Drop your videos here</div>
-                <div class="upload-subtext">or click to browse (MP4, MOV, AVI, max 100MB)</div>
+                <div class="upload-icon" style="font-size: 24px; color: #ccc;">―</div>
+                <div class="upload-text">動画をここにドラッグ</div>
+                <div class="upload-subtext">クリックで選択（最大100MB）</div>
+                <div style="margin-top: 12px; font-size: 10px; color: #ccc;">複数可</div>
             </div>
 
             <!-- 설정 패널 -->
             <div class="settings-panel" style="display: none;" id="video-settings">
                 <!-- 품질 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label">Quality Preset</label>
+                    <label class="settings-label">品質</label>
                     <div class="radio-group" id="video-quality">
                         <label class="radio-option">
                             <input type="radio" name="video-quality" value="high">
-                            High
+                            高
                         </label>
                         <label class="radio-option selected">
                             <input type="radio" name="video-quality" value="medium" checked>
-                            Medium
+                            中
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="video-quality" value="low">
-                            Low
+                            低
                         </label>
                     </div>
                 </div>
 
                 <!-- 해상도 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label">Resolution</label>
+                    <label class="settings-label">解像度</label>
                     <div class="radio-group" id="video-resolution">
                         <label class="radio-option">
                             <input type="radio" name="video-resolution" value="original">
-                            Original
+                            オリジナル
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="video-resolution" value="1080">
@@ -667,10 +724,10 @@
 
                 <!-- 오디오 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label">Audio Options</label>
+                    <label class="settings-label">音声</label>
                     <div class="checkbox-wrapper">
                         <input type="checkbox" id="remove-audio">
-                        <label for="remove-audio" class="checkbox-label">Remove audio track</label>
+                        <label for="remove-audio" class="checkbox-label">音声を削除</label>
                     </div>
                 </div>
             </div>
@@ -686,34 +743,38 @@
             <!-- 로딩 인디케이터 -->
             <div class="loading" id="video-loading">
                 <div class="spinner"></div>
-                <div class="loading-text">Processing videos...</div>
+                <div class="loading-text">処理中...</div>
             </div>
 
             <!-- 통계 -->
             <div class="stats" id="video-stats" style="display: none;">
                 <div class="stat-item">
                     <div class="stat-value" id="video-total-files">0</div>
-                    <div class="stat-label">Total Files</div>
+                    <div class="stat-label">ファイル数</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value" id="video-original-size">0 MB</div>
-                    <div class="stat-label">Original Size</div>
+                    <div class="stat-label">元のサイズ</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value" id="video-compressed-size">0 MB</div>
-                    <div class="stat-label">Compressed Size</div>
+                    <div class="stat-label">圧縮後</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value" id="video-saved">0%</div>
-                    <div class="stat-label">Space Saved</div>
+                    <div class="stat-value" id="video-saved" style="color: #666; font-weight: 400;">0%</div>
+                    <div class="stat-label">削減率</div>
                 </div>
             </div>
 
             <!-- 버튼 그룹 -->
             <div class="button-group" id="video-buttons" style="display: none;">
-                <button class="btn" id="video-clear">Clear All</button>
-                <button class="btn primary" id="video-process">Process Videos</button>
-                <button class="btn primary" id="video-download" style="display: none;">Download All</button>
+                <button class="btn" id="video-clear">全てクリア</button>
+                <button class="btn primary" id="video-process">実行</button>
+                <button class="btn" id="video-download" style="display: none; background: #111; color: #fff; border-color: #111;"
+                    onmouseover="this.style.opacity='0.8';" 
+                    onmouseout="this.style.opacity='1';">
+                    一括ダウンロード
+                </button>
             </div>
         </div>
     </div>
@@ -726,6 +787,43 @@
         let processedVideos = [];
         let ffmpeg = null;
         let ffmpegLoaded = false;
+
+        // 팀 응원 메시지 로테이션
+        const teamMessages = [
+            "静かに整える。確かに進める。",
+            "軽くして、速くする。",
+            "細部に、意図を。",
+            "必要なだけ、十分に。",
+            "静度と速度のバランス。",
+            "見えない部分まで、丁寧に。"
+        ];
+
+        let messageIndex = 0;
+        
+        // 성공 메시지 표시 함수
+        function showSuccessMessage(message) {
+            const div = document.createElement('div');
+            div.className = 'success-message';
+            div.innerHTML = message;
+            document.body.appendChild(div);
+            
+            setTimeout(() => {
+                div.remove();
+            }, 2000);
+        }
+
+        // 팀 메시지 로테이션 (30초마다)
+        setInterval(() => {
+            messageIndex = (messageIndex + 1) % teamMessages.length;
+            const messageElement = document.getElementById('team-message');
+            if (messageElement) {
+                messageElement.style.opacity = '0';
+                setTimeout(() => {
+                    messageElement.textContent = teamMessages[messageIndex];
+                    messageElement.style.opacity = '1';
+                }, 300);
+            }
+        }, 30000);
 
         // 설정 저장/불러오기
         const settings = {
@@ -924,7 +1022,7 @@
             photoFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
             
             if (photoFiles.length === 0) {
-                alert('Please select valid image files');
+                alert('有効な画像ファイルを選択してください');
                 return;
             }
 
@@ -950,7 +1048,7 @@
                         <div class="file-name">${file.name}</div>
                         <div class="file-size">${formatFileSize(file.size)}</div>
                     </div>
-                    <div class="file-status" id="photo-status-${index}">Ready</div>
+                    <div class="file-status" id="photo-status-${index}">待機</div>
                 `;
                 fileList.appendChild(fileItem);
             });
@@ -980,7 +1078,7 @@
             for (let i = 0; i < photoFiles.length; i++) {
                 const file = photoFiles[i];
                 const statusElement = document.getElementById(`photo-status-${i}`);
-                statusElement.textContent = 'Processing';
+                statusElement.textContent = '処理中';
                 statusElement.className = 'file-status processing';
 
                 try {
@@ -990,11 +1088,11 @@
                     totalOriginalSize += file.size;
                     totalCompressedSize += processed.blob.size;
                     
-                    statusElement.textContent = 'Complete';
+                    statusElement.textContent = '完了';
                     statusElement.className = 'file-status complete';
                 } catch (error) {
                     console.error('Error processing image:', error);
-                    statusElement.textContent = 'Error';
+                    statusElement.textContent = 'エラー';
                     statusElement.className = 'file-status error';
                 }
 
@@ -1005,6 +1103,9 @@
 
             // 통계 표시
             displayPhotoStats(totalOriginalSize, totalCompressedSize);
+            
+            // 성공 메시지 표시
+            showSuccessMessage(`${photoFiles.length}件の画像を圧縮しました。`);
             
             // 다운로드 버튼 표시
             document.getElementById('photo-download').style.display = 'inline-block';
@@ -1090,6 +1191,8 @@
         document.getElementById('photo-download').addEventListener('click', async () => {
             if (processedPhotos.length === 0) return;
             
+            showSuccessMessage('準備中...');
+            
             if (processedPhotos.length === 1) {
                 // 단일 파일 다운로드
                 downloadFile(processedPhotos[0].blob, processedPhotos[0].name);
@@ -1103,6 +1206,10 @@
                 const zipBlob = await zip.generateAsync({type: 'blob'});
                 downloadFile(zipBlob, 'photos.zip');
             }
+            
+            setTimeout(() => {
+                showSuccessMessage('完了');
+            }, 1000);
         });
 
         // Photo 초기화
@@ -1125,7 +1232,7 @@
             
             const loading = document.getElementById('video-loading');
             loading.classList.add('active');
-            loading.querySelector('.loading-text').textContent = 'Loading video processor...';
+            loading.querySelector('.loading-text').textContent = '準備中...';
             
             try {
                 ffmpeg = FFmpeg.createFFmpeg({
@@ -1135,10 +1242,10 @@
                 
                 await ffmpeg.load();
                 ffmpegLoaded = true;
-                console.log('FFmpeg loaded successfully');
+                console.log('Video processor ready');
             } catch (error) {
                 console.error('Failed to load FFmpeg:', error);
-                alert('Failed to load video processor. Video compression may not work.');
+                alert('ビデオ処理の準備に失敗しました');
             } finally {
                 loading.classList.remove('active');
             }
@@ -1179,14 +1286,14 @@
             videoFiles = Array.from(files).filter(file => {
                 if (!file.type.startsWith('video/')) return false;
                 if (file.size > 100 * 1024 * 1024) { // 100MB 제한
-                    alert(`${file.name} is larger than 100MB. Please select a smaller file.`);
+                    alert(`${file.name}は100MBを超えています`);
                     return false;
                 }
                 return true;
             });
             
             if (videoFiles.length === 0) {
-                alert('Please select valid video files (max 100MB each)');
+                alert('有効な動画ファイルを選択してください（最大100MB）');
                 return;
             }
 
@@ -1215,7 +1322,7 @@
                         <div class="file-name">${file.name}</div>
                         <div class="file-size">${formatFileSize(file.size)}</div>
                     </div>
-                    <div class="file-status" id="video-status-${index}">Ready</div>
+                    <div class="file-status" id="video-status-${index}">待機</div>
                 `;
                 fileList.appendChild(fileItem);
             });
@@ -1224,7 +1331,7 @@
         // Video 처리 버튼
         document.getElementById('video-process').addEventListener('click', async () => {
             if (!ffmpegLoaded) {
-                alert('Video processor is not loaded. Please try again.');
+                alert('準備中です。もう一度お試しください');
                 return;
             }
 
@@ -1244,11 +1351,11 @@
             for (let i = 0; i < videoFiles.length; i++) {
                 const file = videoFiles[i];
                 const statusElement = document.getElementById(`video-status-${i}`);
-                statusElement.textContent = 'Processing';
+                statusElement.textContent = '処理中';
                 statusElement.className = 'file-status processing';
                 
                 loading.classList.add('active');
-                loading.querySelector('.loading-text').textContent = `Processing ${file.name}...`;
+                loading.querySelector('.loading-text').textContent = `処理中：${file.name}`;
 
                 try {
                     const processed = await processVideo(file, quality, resolution, removeAudio);
@@ -1257,11 +1364,11 @@
                     totalOriginalSize += file.size;
                     totalCompressedSize += processed.blob.size;
                     
-                    statusElement.textContent = 'Complete';
+                    statusElement.textContent = '完了';
                     statusElement.className = 'file-status complete';
                 } catch (error) {
                     console.error('Error processing video:', error);
-                    statusElement.textContent = 'Error';
+                    statusElement.textContent = 'エラー';
                     statusElement.className = 'file-status error';
                 }
 
@@ -1274,6 +1381,9 @@
             
             // 통계 표시
             displayVideoStats(totalOriginalSize, totalCompressedSize);
+            
+            // 성공 메시지 표시
+            showSuccessMessage(`${videoFiles.length}件の動画を圧縮しました。`);
             
             // 다운로드 버튼 표시
             document.getElementById('video-download').style.display = 'inline-block';
@@ -1363,6 +1473,8 @@
         document.getElementById('video-download').addEventListener('click', async () => {
             if (processedVideos.length === 0) return;
             
+            showSuccessMessage('準備中...');
+            
             if (processedVideos.length === 1) {
                 // 단일 파일 다운로드
                 downloadFile(processedVideos[0].blob, processedVideos[0].name);
@@ -1376,6 +1488,10 @@
                 const zipBlob = await zip.generateAsync({type: 'blob'});
                 downloadFile(zipBlob, 'videos.zip');
             }
+            
+            setTimeout(() => {
+                showSuccessMessage('完了');
+            }, 1000);
         });
 
         // Video 초기화
@@ -1418,15 +1534,17 @@
             // 저장된 설정 불러오기 및 적용
             settings.apply();
             
-            console.log('OHOTORO COMPRESSOR loaded');
-            console.log('Settings loaded:', settings.load());
+            console.log('OHOTORO HORIE Optimizer ready');
         });
 
         // 설정 리셋 버튼
         document.getElementById('reset-settings').addEventListener('click', () => {
-            if (confirm('Reset all settings to default?')) {
+            if (confirm('設定を初期化しますか？')) {
                 localStorage.removeItem('ohotoro-settings');
-                location.reload();
+                showSuccessMessage('初期化しました');
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
             }
         });
     </script>

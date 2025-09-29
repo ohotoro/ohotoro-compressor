@@ -897,15 +897,24 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // 크기 계산
+                        // 크기 계산 - 비율 유지하며 리사이징
                         let width = img.width;
                         let height = img.height;
                         
-                        if (maxSize) {
-                            const ratio = Math.min(maxSize / width, maxSize / height);
-                            if (ratio < 1) {
-                                width *= ratio;
-                                height *= ratio;
+                        if (maxSize && maxSize !== 'original') {
+                            // 가로와 세로 중 큰 값을 기준으로 비율 계산
+                            if (width > height) {
+                                // 가로가 더 긴 경우
+                                if (width > maxSize) {
+                                    height = Math.round((height * maxSize) / width);
+                                    width = maxSize;
+                                }
+                            } else {
+                                // 세로가 더 길거나 같은 경우
+                                if (height > maxSize) {
+                                    width = Math.round((width * maxSize) / height);
+                                    height = maxSize;
+                                }
                             }
                         }
                         
@@ -922,10 +931,10 @@
                         
                         // Blob으로 변환
                         canvas.toBlob((blob) => {
-                            // 파일명 생성
+                            // 파일명 생성 - 원본 이름 그대로 사용, 확장자만 변경
                             const extension = format === 'jpeg' ? 'jpg' : format;
                             const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-                            const fileName = `${baseName}_compressed.${extension}`;
+                            const fileName = `${baseName}.${extension}`;
                             
                             resolve({
                                 blob: blob,
@@ -968,7 +977,7 @@
                 });
                 
                 const zipBlob = await zip.generateAsync({type: 'blob'});
-                downloadFile(zipBlob, 'compressed_photos.zip');
+                downloadFile(zipBlob, 'photos.zip');
             }
         });
 
@@ -1201,9 +1210,9 @@
             ffmpeg.FS('unlink', inputName);
             ffmpeg.FS('unlink', outputName);
             
-            // 파일명 생성
+            // 파일명 생성 - 원본 이름 그대로 사용
             const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-            const fileName = `${baseName}_compressed.mp4`;
+            const fileName = `${baseName}.mp4`;
             
             return {
                 blob: blob,
@@ -1238,7 +1247,7 @@
                 });
                 
                 const zipBlob = await zip.generateAsync({type: 'blob'});
-                downloadFile(zipBlob, 'compressed_videos.zip');
+                downloadFile(zipBlob, 'videos.zip');
             }
         });
 

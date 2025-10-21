@@ -267,6 +267,118 @@
             color: #666;
         }
 
+        /* 크롭 에디터 모달 */
+        .crop-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crop-modal.active {
+            display: flex;
+        }
+
+        .crop-container {
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .crop-header {
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .crop-filename {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .crop-counter {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .crop-canvas-wrapper {
+            position: relative;
+            background: #000;
+            margin-bottom: 20px;
+            touch-action: none;
+        }
+
+        #crop-canvas {
+            display: block;
+            max-width: 80vw;
+            max-height: 70vh;
+            cursor: crosshair;
+        }
+
+        .crop-overlay {
+            position: absolute;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+
+        .crop-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border: 1px solid #111;
+        }
+
+        .crop-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
+        .crop-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
+        .crop-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+        .crop-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
+
+        .crop-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .crop-btn {
+            padding: 12px 32px;
+            background: #fff;
+            color: #111;
+            border: 1px solid #fff;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .crop-btn:hover {
+            background: #111;
+            color: #fff;
+        }
+
+        .crop-btn-skip {
+            background: transparent;
+            color: #999;
+            border-color: #999;
+        }
+
+        .crop-btn-skip:hover {
+            background: #999;
+            color: #111;
+        }
+
         /* 파일 리스트 */
         .file-list {
             display: none;
@@ -528,6 +640,19 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+
+            #crop-canvas {
+                max-width: 90vw;
+            }
+
+            .crop-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .crop-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -583,6 +708,10 @@
                         <label class="radio-option">
                             <input type="radio" name="crop-ratio" value="4:3">
                             <span>4:3</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="crop-ratio" value="manual">
+                            <span data-i18n="manual_crop">Manual</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="crop-ratio" value="custom">
@@ -813,6 +942,24 @@
         </div>
     </div>
 
+    <!-- 크롭 에디터 모달 -->
+    <div class="crop-modal" id="crop-modal">
+        <div class="crop-container">
+            <div class="crop-header">
+                <div class="crop-filename" id="crop-filename"></div>
+                <div class="crop-counter" id="crop-counter"></div>
+            </div>
+            <div class="crop-canvas-wrapper" id="crop-canvas-wrapper">
+                <canvas id="crop-canvas"></canvas>
+                <div class="crop-overlay" id="crop-overlay"></div>
+            </div>
+            <div class="crop-controls">
+                <button class="crop-btn crop-btn-skip" id="crop-skip" data-i18n="skip">Skip</button>
+                <button class="crop-btn" id="crop-confirm" data-i18n="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 성공 메시지 -->
     <div class="success-message" id="success-message"></div>
 
@@ -826,6 +973,7 @@
                 support_format_video: 'Supports MP4, MOV, AVI, WebM',
                 crop_ratio: 'Crop Ratio',
                 crop_none: 'None',
+                manual_crop: 'Manual',
                 quality: 'Quality',
                 low: 'Low',
                 medium: 'Medium',
@@ -857,7 +1005,10 @@
                 message_complete: 'Complete!',
                 message_ready: 'Please wait for the system to be ready',
                 message_reset_confirm: 'Are you sure you want to reset all settings?',
-                message_initialized: 'Settings have been reset'
+                message_initialized: 'Settings have been reset',
+                skip: 'Skip',
+                confirm: 'Confirm',
+                crop_instruction: 'Drag to select crop area'
             },
             ko: {
                 upload_image: '이미지를 드래그하거나 클릭하여 업로드',
@@ -866,6 +1017,7 @@
                 support_format_video: 'MP4, MOV, AVI, WebM 지원',
                 crop_ratio: '크롭 비율',
                 crop_none: '없음',
+                manual_crop: '수동',
                 quality: '품질',
                 low: '낮음',
                 medium: '중간',
@@ -897,7 +1049,10 @@
                 message_complete: '완료!',
                 message_ready: '시스템이 준비될 때까지 기다려주세요',
                 message_reset_confirm: '모든 설정을 초기화하시겠습니까?',
-                message_initialized: '설정이 초기화되었습니다'
+                message_initialized: '설정이 초기화되었습니다',
+                skip: '건너뛰기',
+                confirm: '확인',
+                crop_instruction: '드래그하여 크롭 영역 선택'
             },
             ja: {
                 upload_image: '画像をドラッグまたはクリックしてアップロード',
@@ -906,6 +1061,7 @@
                 support_format_video: 'MP4、MOV、AVI、WebM対応',
                 crop_ratio: 'クロップ比率',
                 crop_none: 'なし',
+                manual_crop: 'マニュアル',
                 quality: '品質',
                 low: '低',
                 medium: '中',
@@ -937,7 +1093,10 @@
                 message_complete: '完了！',
                 message_ready: 'システムの準備ができるまでお待ちください',
                 message_reset_confirm: 'すべての設定をリセットしますか？',
-                message_initialized: '設定がリセットされました'
+                message_initialized: '設定がリセットされました',
+                skip: 'スキップ',
+                confirm: '確認',
+                crop_instruction: 'ドラッグしてクロップ領域を選択'
             }
         };
 
@@ -1148,9 +1307,225 @@
             }, 3000);
         }
 
+        // ============= 크롭 에디터 =============
+        class CropEditor {
+            constructor() {
+                this.modal = document.getElementById('crop-modal');
+                this.canvas = document.getElementById('crop-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.overlay = document.getElementById('crop-overlay');
+                this.wrapper = document.getElementById('crop-canvas-wrapper');
+                
+                this.currentImage = null;
+                this.cropArea = { x: 0, y: 0, width: 0, height: 0 };
+                this.isDragging = false;
+                this.dragStart = { x: 0, y: 0 };
+                this.scale = 1;
+                this.offsetX = 0;
+                this.offsetY = 0;
+                
+                this.setupEvents();
+            }
+
+            setupEvents() {
+                this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
+                this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
+                this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
+                
+                // 터치 이벤트
+                this.canvas.addEventListener('touchstart', this.onTouchStart.bind(this));
+                this.canvas.addEventListener('touchmove', this.onTouchMove.bind(this));
+                this.canvas.addEventListener('touchend', this.onTouchEnd.bind(this));
+            }
+
+            async open(file, index, total) {
+                return new Promise((resolve) => {
+                    document.getElementById('crop-filename').textContent = file.name;
+                    document.getElementById('crop-counter').textContent = `${index + 1} / ${total}`;
+                    
+                    const img = new Image();
+                    const reader = new FileReader();
+
+                    reader.onload = (e) => {
+                        img.src = e.target.result;
+                    };
+
+                    img.onload = () => {
+                        this.currentImage = img;
+                        this.setupCanvas();
+                        this.modal.classList.add('active');
+                        
+                        // 버튼 이벤트
+                        const confirmBtn = document.getElementById('crop-confirm');
+                        const skipBtn = document.getElementById('crop-skip');
+                        
+                        const handleConfirm = () => {
+                            cleanup();
+                            resolve(this.getCropData());
+                        };
+                        
+                        const handleSkip = () => {
+                            cleanup();
+                            resolve(null);
+                        };
+                        
+                        const cleanup = () => {
+                            confirmBtn.removeEventListener('click', handleConfirm);
+                            skipBtn.removeEventListener('click', handleSkip);
+                            this.modal.classList.remove('active');
+                        };
+                        
+                        confirmBtn.addEventListener('click', handleConfirm);
+                        skipBtn.addEventListener('click', handleSkip);
+                    };
+
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            setupCanvas() {
+                const maxWidth = window.innerWidth * 0.8;
+                const maxHeight = window.innerHeight * 0.7;
+                
+                let width = this.currentImage.width;
+                let height = this.currentImage.height;
+                
+                if (width > maxWidth || height > maxHeight) {
+                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                    width *= ratio;
+                    height *= ratio;
+                }
+                
+                this.canvas.width = width;
+                this.canvas.height = height;
+                this.scale = width / this.currentImage.width;
+                
+                this.ctx.drawImage(this.currentImage, 0, 0, width, height);
+                
+                // 초기 크롭 영역 (중앙에 80% 크기)
+                const cropWidth = width * 0.8;
+                const cropHeight = height * 0.8;
+                this.cropArea = {
+                    x: (width - cropWidth) / 2,
+                    y: (height - cropHeight) / 2,
+                    width: cropWidth,
+                    height: cropHeight
+                };
+                
+                this.updateOverlay();
+            }
+
+            updateOverlay() {
+                this.overlay.style.left = this.cropArea.x + 'px';
+                this.overlay.style.top = this.cropArea.y + 'px';
+                this.overlay.style.width = this.cropArea.width + 'px';
+                this.overlay.style.height = this.cropArea.height + 'px';
+            }
+
+            onMouseDown(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                this.isDragging = true;
+                this.dragStart = { x, y };
+                this.cropArea = { x, y, width: 0, height: 0 };
+            }
+
+            onMouseMove(e) {
+                if (!this.isDragging) return;
+                
+                const rect = this.canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                this.cropArea.width = x - this.dragStart.x;
+                this.cropArea.height = y - this.dragStart.y;
+                
+                // 음수 처리
+                if (this.cropArea.width < 0) {
+                    this.cropArea.x = x;
+                    this.cropArea.width = Math.abs(this.cropArea.width);
+                } else {
+                    this.cropArea.x = this.dragStart.x;
+                }
+                
+                if (this.cropArea.height < 0) {
+                    this.cropArea.y = y;
+                    this.cropArea.height = Math.abs(this.cropArea.height);
+                } else {
+                    this.cropArea.y = this.dragStart.y;
+                }
+                
+                this.updateOverlay();
+            }
+
+            onMouseUp() {
+                this.isDragging = false;
+            }
+
+            onTouchStart(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = this.canvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                this.isDragging = true;
+                this.dragStart = { x, y };
+                this.cropArea = { x, y, width: 0, height: 0 };
+            }
+
+            onTouchMove(e) {
+                if (!this.isDragging) return;
+                e.preventDefault();
+                
+                const touch = e.touches[0];
+                const rect = this.canvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                this.cropArea.width = x - this.dragStart.x;
+                this.cropArea.height = y - this.dragStart.y;
+                
+                // 음수 처리
+                if (this.cropArea.width < 0) {
+                    this.cropArea.x = x;
+                    this.cropArea.width = Math.abs(this.cropArea.width);
+                } else {
+                    this.cropArea.x = this.dragStart.x;
+                }
+                
+                if (this.cropArea.height < 0) {
+                    this.cropArea.y = y;
+                    this.cropArea.height = Math.abs(this.cropArea.height);
+                } else {
+                    this.cropArea.y = this.dragStart.y;
+                }
+                
+                this.updateOverlay();
+            }
+
+            onTouchEnd() {
+                this.isDragging = false;
+            }
+
+            getCropData() {
+                return {
+                    x: this.cropArea.x / this.scale,
+                    y: this.cropArea.y / this.scale,
+                    width: this.cropArea.width / this.scale,
+                    height: this.cropArea.height / this.scale
+                };
+            }
+        }
+
+        const cropEditor = new CropEditor();
+
         // ============= Image 처리 =============
         let imageFiles = [];
         let processedImages = [];
+        let manualCropData = [];
 
         const imageInput = document.getElementById('image-input');
         const imageUploadArea = document.getElementById('image-upload-area');
@@ -1180,6 +1555,7 @@
         // 파일 처리
         function handleImageFiles(files) {
             imageFiles = Array.from(files);
+            manualCropData = [];
             
             // UI 업데이트
             document.getElementById('image-settings').style.display = 'block';
@@ -1216,6 +1592,14 @@
             const cropRatio = document.querySelector('input[name="crop-ratio"]:checked').value;
             const keepOriginalName = document.getElementById('keep-original-name').checked;
 
+            // Manual crop 모드일 경우 크롭 에디터 열기
+            if (cropRatio === 'manual') {
+                for (let i = 0; i < imageFiles.length; i++) {
+                    const cropData = await cropEditor.open(imageFiles[i], i, imageFiles.length);
+                    manualCropData.push(cropData);
+                }
+            }
+
             // 로딩 표시
             const loading = document.getElementById('image-loading');
             const progressBar = document.getElementById('image-progress');
@@ -1235,7 +1619,8 @@
                 loading.querySelector('.loading-text').textContent = `${getMessage('status_processing')}: ${file.name}`;
 
                 try {
-                    const processed = await processImage(file, quality, resize, cropRatio, keepOriginalName);
+                    const manualCrop = cropRatio === 'manual' ? manualCropData[i] : null;
+                    const processed = await processImage(file, quality, resize, cropRatio, keepOriginalName, manualCrop);
                     processedImages.push(processed);
                     
                     totalOriginalSize += file.size;
@@ -1267,8 +1652,8 @@
             progressBar.classList.remove('active');
         });
 
-        // 이미지 처리 함수 (크롭 기능 포함)
-        async function processImage(file, quality, resize, cropRatio, keepOriginalName) {
+        // 이미지 처리 함수
+        async function processImage(file, quality, resize, cropRatio, keepOriginalName, manualCrop = null) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 const reader = new FileReader();
@@ -1289,7 +1674,14 @@
                     let sourceHeight = height;
 
                     // 크롭 적용
-                    if (cropRatio !== 'none') {
+                    if (manualCrop) {
+                        // Manual crop
+                        sourceX = manualCrop.x;
+                        sourceY = manualCrop.y;
+                        sourceWidth = manualCrop.width;
+                        sourceHeight = manualCrop.height;
+                    } else if (cropRatio !== 'none' && cropRatio !== 'manual') {
+                        // Auto crop
                         let ratioWidth, ratioHeight;
                         
                         if (cropRatio === 'custom') {
@@ -1305,11 +1697,9 @@
                         const currentRatio = width / height;
 
                         if (currentRatio > targetRatio) {
-                            // 이미지가 더 넓음 - 가로를 잘라냄
                             sourceWidth = height * targetRatio;
                             sourceX = (width - sourceWidth) / 2;
                         } else {
-                            // 이미지가 더 높음 - 세로를 잘라냄
                             sourceHeight = width / targetRatio;
                             sourceY = (height - sourceHeight) / 2;
                         }
@@ -1417,6 +1807,7 @@
         document.getElementById('image-clear').addEventListener('click', () => {
             imageFiles = [];
             processedImages = [];
+            manualCropData = [];
             document.getElementById('image-settings').style.display = 'none';
             document.getElementById('image-file-list').style.display = 'none';
             document.getElementById('image-stats').style.display = 'none';

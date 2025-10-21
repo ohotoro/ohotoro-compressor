@@ -670,6 +670,80 @@
                         </label>
                     </div>
                 </div>
+
+                <!-- 크롭 설정 -->
+                <div class="settings-group">
+                    <label class="settings-label">CROP MODE</label>
+                    <div class="radio-group" id="photo-crop-mode">
+                        <label class="radio-option selected">
+                            <input type="radio" name="photo-crop-mode" value="none" checked>
+                            <span>No Crop</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-crop-mode" value="ratio">
+                            <span>Aspect Ratio</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-crop-mode" value="custom">
+                            <span>Custom Size</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 비율 선택 -->
+                <div class="settings-group" id="photo-ratio-group" style="display:none;">
+                    <label class="settings-label">ASPECT RATIO</label>
+                    <div class="radio-group" id="photo-aspect-ratio">
+                        <label class="radio-option selected">
+                            <input type="radio" name="photo-aspect-ratio" value="1:1" checked>
+                            <span>1:1 Square</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-aspect-ratio" value="16:9">
+                            <span>16:9 Wide</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-aspect-ratio" value="9:16">
+                            <span>9:16 Portrait</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-aspect-ratio" value="4:3">
+                            <span>4:3 Standard</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-aspect-ratio" value="3:4">
+                            <span>3:4 Portrait</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 커스텀 크롭 사이즈 -->
+                <div class="settings-group" id="photo-custom-crop-size" style="display:none;">
+                    <label class="settings-label">CUSTOM CROP SIZE</label>
+                    <div class="custom-input active" style="gap:15px;">
+                        <input type="number" id="photo-crop-width" placeholder="Width (px)" min="10" max="5000">
+                        <span>×</span>
+                        <input type="number" id="photo-crop-height" placeholder="Height (px)" min="10" max="5000">
+                        <span>px</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 크롭 미리보기 영역 -->
+            <div id="crop-preview-container" style="display:none; background:#fff; border:1px solid #e6e6e6; padding:30px; margin:20px 0;">
+                <div class="settings-label" style="margin-bottom:20px;">CROP PREVIEW</div>
+                <div style="position:relative; display:inline-block; margin:0 auto; width:100%; max-width:600px;">
+                    <canvas id="crop-preview-canvas" style="width:100%; display:block; border:1px solid #e6e6e6;"></canvas>
+                    <div id="crop-box" style="position:absolute; border:2px solid #fff; box-shadow:0 0 0 9999px rgba(0,0,0,0.5); cursor:move; display:none;">
+                        <div class="resize-handle" data-handle="tl" style="position:absolute; width:10px; height:10px; background:#fff; border:1px solid #111; top:-5px; left:-5px; cursor:nw-resize;"></div>
+                        <div class="resize-handle" data-handle="tr" style="position:absolute; width:10px; height:10px; background:#fff; border:1px solid #111; top:-5px; right:-5px; cursor:ne-resize;"></div>
+                        <div class="resize-handle" data-handle="bl" style="position:absolute; width:10px; height:10px; background:#fff; border:1px solid #111; bottom:-5px; left:-5px; cursor:sw-resize;"></div>
+                        <div class="resize-handle" data-handle="br" style="position:absolute; width:10px; height:10px; background:#fff; border:1px solid #111; bottom:-5px; right:-5px; cursor:se-resize;"></div>
+                    </div>
+                </div>
+                <div style="margin-top:15px; font-size:10px; color:#999; text-align:center;">
+                    Drag to move • Drag corners to resize
+                </div>
             </div>
 
             <!-- 파일 리스트 -->
@@ -1263,6 +1337,87 @@
             
             // 파일 리스트 표시
             displayPhotoFiles();
+            
+            // 첫 번째 이미지로 크롭 미리보기 업데이트
+            if (photoFiles.length > 0) {
+                updateCropPreview(photoFiles[0]);
+            }
+        }
+        
+        // 크롭 미리보기 업데이트
+        function updateCropPreview(file) {
+            const cropMode = document.querySelector('input[name="photo-crop-mode"]:checked')?.value || 'none';
+            const previewContainer = document.getElementById('crop-preview-container');
+            
+            if (cropMode === 'none') {
+                previewContainer.style.display = 'none';
+                return;
+            }
+            
+            previewContainer.style.display = 'block';
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.getElementById('crop-preview-canvas');
+                    const ctx = canvas.getContext('2d');
+                    const cropBox = document.getElementById('crop-box');
+                    
+                    // Canvas 크기 설정
+                    const maxWidth = 600;
+                    const scale = Math.min(1, maxWidth / img.width);
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+                    
+                    // 이미지 그리기
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // 크롭 박스 초기화
+                    let cropWidth, cropHeight;
+                    
+                    if (cropMode === 'ratio') {
+                        const ratio = document.querySelector('input[name="photo-aspect-ratio"]:checked')?.value || '1:1';
+                        const [widthRatio, heightRatio] = ratio.split(':').map(Number);
+                        
+                        if (canvas.width / canvas.height > widthRatio / heightRatio) {
+                            cropHeight = canvas.height;
+                            cropWidth = cropHeight * widthRatio / heightRatio;
+                        } else {
+                            cropWidth = canvas.width;
+                            cropHeight = cropWidth * heightRatio / widthRatio;
+                        }
+                    } else if (cropMode === 'custom') {
+                        const customWidth = parseInt(document.getElementById('photo-crop-width').value) || 800;
+                        const customHeight = parseInt(document.getElementById('photo-crop-height').value) || 600;
+                        const customScale = Math.min(canvas.width / customWidth, canvas.height / customHeight);
+                        cropWidth = Math.min(customWidth * customScale, canvas.width);
+                        cropHeight = Math.min(customHeight * customScale, canvas.height);
+                    }
+                    
+                    // 크롭 박스 위치 설정 (중앙)
+                    const cropX = (canvas.width - cropWidth) / 2;
+                    const cropY = (canvas.height - cropHeight) / 2;
+                    
+                    cropBox.style.left = cropX + 'px';
+                    cropBox.style.top = cropY + 'px';
+                    cropBox.style.width = cropWidth + 'px';
+                    cropBox.style.height = cropHeight + 'px';
+                    cropBox.style.display = 'block';
+                    
+                    // 크롭 박스 정보 저장
+                    cropBoxInfo = {
+                        x: cropX,
+                        y: cropY,
+                        width: cropWidth,
+                        height: cropHeight,
+                        canvasWidth: canvas.width,
+                        canvasHeight: canvas.height
+                    };
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         // Photo 파일 리스트 표시
@@ -1343,6 +1498,9 @@
         });
 
         // 이미지 처리 함수
+        // 크롭 박스 정보 저장
+        let cropBoxInfo = null;
+        
         async function processImage(file, quality, maxSize, format) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1352,10 +1510,58 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // 크기 계산 - 비율 유지하며 리사이징
+                        // 크롭 설정 확인
+                        const cropMode = document.querySelector('input[name="photo-crop-mode"]:checked')?.value || 'none';
+                        
+                        let sourceX = 0, sourceY = 0;
+                        let sourceWidth = img.width;
+                        let sourceHeight = img.height;
                         let width = img.width;
                         let height = img.height;
                         
+                        if (cropMode !== 'none' && cropBoxInfo) {
+                            // 크롭 박스 정보 사용
+                            const scaleX = img.width / cropBoxInfo.canvasWidth;
+                            const scaleY = img.height / cropBoxInfo.canvasHeight;
+                            
+                            sourceX = cropBoxInfo.x * scaleX;
+                            sourceY = cropBoxInfo.y * scaleY;
+                            sourceWidth = cropBoxInfo.width * scaleX;
+                            sourceHeight = cropBoxInfo.height * scaleY;
+                            
+                            width = sourceWidth;
+                            height = sourceHeight;
+                        } else if (cropMode === 'ratio') {
+                            const ratio = document.querySelector('input[name="photo-aspect-ratio"]:checked')?.value || '1:1';
+                            const [widthRatio, heightRatio] = ratio.split(':').map(Number);
+                            
+                            if (img.width / img.height > widthRatio / heightRatio) {
+                                sourceHeight = img.height;
+                                sourceWidth = sourceHeight * widthRatio / heightRatio;
+                            } else {
+                                sourceWidth = img.width;
+                                sourceHeight = sourceWidth * heightRatio / widthRatio;
+                            }
+                            
+                            sourceX = (img.width - sourceWidth) / 2;
+                            sourceY = (img.height - sourceHeight) / 2;
+                            width = sourceWidth;
+                            height = sourceHeight;
+                        } else if (cropMode === 'custom') {
+                            const cropWidth = parseInt(document.getElementById('photo-crop-width').value) || 800;
+                            const cropHeight = parseInt(document.getElementById('photo-crop-height').value) || 600;
+                            
+                            const scale = Math.max(cropWidth / img.width, cropHeight / img.height);
+                            sourceWidth = cropWidth / scale;
+                            sourceHeight = cropHeight / scale;
+                            
+                            sourceX = (img.width - sourceWidth) / 2;
+                            sourceY = (img.height - sourceHeight) / 2;
+                            width = cropWidth;
+                            height = cropHeight;
+                        }
+                        
+                        // 크기 계산 - 비율 유지하며 리사이징 (크롭 후)
                         if (maxSize && maxSize !== null) {
                             // 가로와 세로 중 큰 값을 기준으로 비율 계산
                             if (width > height) {
@@ -1377,7 +1583,7 @@
                         canvas.height = height;
                         
                         // 이미지 그리기
-                        ctx.drawImage(img, 0, 0, width, height);
+                        ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, width, height);
                         
                         // 포맷별 MIME 타입 설정
                         let mimeType = 'image/jpeg';
@@ -1759,6 +1965,178 @@
             URL.revokeObjectURL(url);
         }
 
+        // 크롭 모드 변경 이벤트
+        document.querySelectorAll('input[name="photo-crop-mode"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const mode = e.target.value;
+                document.getElementById('photo-ratio-group').style.display = mode === 'ratio' ? 'block' : 'none';
+                document.getElementById('photo-custom-crop-size').style.display = mode === 'custom' ? 'block' : 'none';
+                
+                if (photoFiles && photoFiles.length > 0) {
+                    updateCropPreview(photoFiles[0]);
+                }
+            });
+        });
+        
+        // 비율 변경 이벤트
+        document.querySelectorAll('input[name="photo-aspect-ratio"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (photoFiles && photoFiles.length > 0) {
+                    updateCropPreview(photoFiles[0]);
+                }
+            });
+        });
+        
+        // 커스텀 크기 변경 이벤트
+        ['photo-crop-width', 'photo-crop-height'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', () => {
+                    if (photoFiles && photoFiles.length > 0) {
+                        updateCropPreview(photoFiles[0]);
+                    }
+                });
+            }
+        });
+        
+        // 크롭 박스 드래그 기능
+        function initCropBoxDrag() {
+            const cropBox = document.getElementById('crop-box');
+            const canvas = document.getElementById('crop-preview-canvas');
+            const handles = document.querySelectorAll('.resize-handle');
+            
+            let isDragging = false;
+            let isResizing = false;
+            let startX, startY, startLeft, startTop, startWidth, startHeight;
+            let activeHandle = null;
+            
+            // 크롭 박스 드래그
+            cropBox.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('resize-handle')) return;
+                
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                startLeft = parseInt(cropBox.style.left);
+                startTop = parseInt(cropBox.style.top);
+                e.preventDefault();
+            });
+            
+            // 리사이즈 핸들
+            handles.forEach(handle => {
+                handle.addEventListener('mousedown', (e) => {
+                    isResizing = true;
+                    activeHandle = handle.dataset.handle;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startLeft = parseInt(cropBox.style.left);
+                    startTop = parseInt(cropBox.style.top);
+                    startWidth = parseInt(cropBox.style.width);
+                    startHeight = parseInt(cropBox.style.height);
+                    e.stopPropagation();
+                    e.preventDefault();
+                });
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    
+                    let newLeft = startLeft + deltaX;
+                    let newTop = startTop + deltaY;
+                    
+                    // 경계 체크
+                    newLeft = Math.max(0, Math.min(newLeft, canvas.width - parseInt(cropBox.style.width)));
+                    newTop = Math.max(0, Math.min(newTop, canvas.height - parseInt(cropBox.style.height)));
+                    
+                    cropBox.style.left = newLeft + 'px';
+                    cropBox.style.top = newTop + 'px';
+                    
+                    // 크롭 박스 정보 업데이트
+                    cropBoxInfo.x = newLeft;
+                    cropBoxInfo.y = newTop;
+                } else if (isResizing) {
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    
+                    let newWidth = startWidth;
+                    let newHeight = startHeight;
+                    let newLeft = startLeft;
+                    let newTop = startTop;
+                    
+                    const cropMode = document.querySelector('input[name="photo-crop-mode"]:checked')?.value;
+                    
+                    if (cropMode === 'ratio') {
+                        // 비율 유지하며 리사이즈
+                        const ratio = document.querySelector('input[name="photo-aspect-ratio"]:checked')?.value || '1:1';
+                        const [widthRatio, heightRatio] = ratio.split(':').map(Number);
+                        const aspectRatio = widthRatio / heightRatio;
+                        
+                        if (activeHandle.includes('r')) {
+                            newWidth = startWidth + deltaX;
+                            newHeight = newWidth / aspectRatio;
+                        } else if (activeHandle.includes('l')) {
+                            newWidth = startWidth - deltaX;
+                            newHeight = newWidth / aspectRatio;
+                            newLeft = startLeft + deltaX;
+                        }
+                        
+                        if (activeHandle.includes('b')) {
+                            newHeight = startHeight + deltaY;
+                            newWidth = newHeight * aspectRatio;
+                        } else if (activeHandle.includes('t')) {
+                            newHeight = startHeight - deltaY;
+                            newWidth = newHeight * aspectRatio;
+                            newTop = startTop + deltaY;
+                        }
+                    } else {
+                        // 자유 리사이즈
+                        if (activeHandle.includes('r')) newWidth = startWidth + deltaX;
+                        if (activeHandle.includes('l')) {
+                            newWidth = startWidth - deltaX;
+                            newLeft = startLeft + deltaX;
+                        }
+                        if (activeHandle.includes('b')) newHeight = startHeight + deltaY;
+                        if (activeHandle.includes('t')) {
+                            newHeight = startHeight - deltaY;
+                            newTop = startTop + deltaY;
+                        }
+                    }
+                    
+                    // 최소 크기 및 경계 체크
+                    newWidth = Math.max(50, Math.min(newWidth, canvas.width - newLeft));
+                    newHeight = Math.max(50, Math.min(newHeight, canvas.height - newTop));
+                    newLeft = Math.max(0, newLeft);
+                    newTop = Math.max(0, newTop);
+                    
+                    cropBox.style.width = newWidth + 'px';
+                    cropBox.style.height = newHeight + 'px';
+                    cropBox.style.left = newLeft + 'px';
+                    cropBox.style.top = newTop + 'px';
+                    
+                    // 크롭 박스 정보 업데이트
+                    cropBoxInfo = {
+                        x: newLeft,
+                        y: newTop,
+                        width: newWidth,
+                        height: newHeight,
+                        canvasWidth: canvas.width,
+                        canvasHeight: canvas.height
+                    };
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                isResizing = false;
+                activeHandle = null;
+            });
+        }
+        
+        // 크롭 박스 드래그 초기화
+        setTimeout(initCropBoxDrag, 100);
+        
         // 페이지 로드시 초기화
         window.addEventListener('load', () => {
             // 언어 초기화

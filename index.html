@@ -1328,6 +1328,7 @@
             }
 
             async open(file, index, total) {
+                console.log('CropEditor.open called for:', file.name);
                 return new Promise((resolve) => {
                     document.getElementById('crop-filename').textContent = file.name;
                     document.getElementById('crop-counter').textContent = `${index + 1} / ${total}`;
@@ -1337,24 +1338,29 @@
                     const reader = new FileReader();
 
                     reader.onload = (e) => {
+                        console.log('File loaded, creating image');
                         img.src = e.target.result;
                     };
 
                     img.onload = () => {
+                        console.log('Image loaded successfully');
                         this.currentImage = img;
                         this.setupCanvas();
                         this.modal.classList.add('active');
+                        console.log('Modal opened');
                         
                         // 버튼 이벤트
                         const confirmBtn = document.getElementById('crop-confirm');
                         const skipBtn = document.getElementById('crop-skip');
                         
                         const handleConfirm = () => {
+                            console.log('Crop confirmed');
                             cleanup();
                             resolve(this.getCropData());
                         };
                         
                         const handleSkip = () => {
+                            console.log('Crop skipped');
                             cleanup();
                             resolve(null);
                         };
@@ -1369,16 +1375,22 @@
                         skipBtn.addEventListener('click', handleSkip);
                     };
 
+                    img.onerror = () => {
+                        console.error('Failed to load image');
+                    };
+
                     reader.readAsDataURL(file);
                 });
             }
 
             setupCanvas() {
+                console.log('setupCanvas called');
                 const maxWidth = window.innerWidth * 0.8;
                 const maxHeight = window.innerHeight * 0.7;
                 
                 let width = this.currentImage.width;
                 let height = this.currentImage.height;
+                console.log('Original image size:', width, 'x', height);
                 
                 if (width > maxWidth || height > maxHeight) {
                     const ratio = Math.min(maxWidth / width, maxHeight / height);
@@ -1389,6 +1401,7 @@
                 this.canvas.width = width;
                 this.canvas.height = height;
                 this.scale = width / this.currentImage.width;
+                console.log('Canvas size:', width, 'x', height, 'Scale:', this.scale);
                 
                 // 초기 크롭 영역 (중앙에 80% 크기)
                 const cropWidth = width * 0.8;
@@ -1399,16 +1412,20 @@
                     width: cropWidth,
                     height: cropHeight
                 };
+                console.log('Initial crop area:', this.cropArea);
                 
                 this.redrawCanvas();
             }
 
             redrawCanvas() {
+                console.log('redrawCanvas called, crop area:', this.cropArea);
+                
                 // 전체 캔버스 지우기
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 
                 // 1. 전체 이미지 그리기
                 this.ctx.drawImage(this.currentImage, 0, 0, this.canvas.width, this.canvas.height);
+                console.log('Image drawn');
                 
                 // 2. 어두운 오버레이 (4개의 사각형으로 크롭 영역 빼고 그리기)
                 this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
@@ -1423,6 +1440,7 @@
                 // 오른쪽
                 this.ctx.fillRect(this.cropArea.x + this.cropArea.width, this.cropArea.y, 
                                  this.canvas.width - (this.cropArea.x + this.cropArea.width), this.cropArea.height);
+                console.log('Overlay drawn');
                 
                 // 3. 크롭 영역 테두리
                 this.ctx.strokeStyle = '#fff';
@@ -1467,6 +1485,8 @@
                     this.ctx.fillRect(x - handleSize/2, y - handleSize/2, handleSize, handleSize);
                     this.ctx.strokeRect(x - handleSize/2, y - handleSize/2, handleSize, handleSize);
                 });
+                
+                console.log('Canvas redraw complete');
             }
 
             onMouseDown(e) {
@@ -1641,10 +1661,14 @@
 
             // Manual crop 모드일 경우 크롭 에디터 열기
             if (cropRatio === 'manual') {
+                console.log('Manual crop mode, opening crop editor for', imageFiles.length, 'files');
                 for (let i = 0; i < imageFiles.length; i++) {
+                    console.log('Opening crop editor for file', i + 1);
                     const cropData = await cropEditor.open(imageFiles[i], i, imageFiles.length);
+                    console.log('Crop data received:', cropData);
                     manualCropData.push(cropData);
                 }
+                console.log('All manual crops completed');
             }
 
             // 로딩 표시

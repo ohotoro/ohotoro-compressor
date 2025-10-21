@@ -255,74 +255,60 @@
         }
 
         .custom-input input {
-            width: 100px;
             padding: 8px 12px;
             border: 1px solid #e6e6e6;
             font-size: 11px;
-            background: #fff;
+            width: 100px;
             transition: border-color 0.3s ease;
         }
 
         .custom-input input:focus {
             outline: none;
-            border-color: #111;
+            border-color: #999;
         }
 
         .custom-input span {
-            font-size: 11px;
+            font-size: 10px;
             color: #666;
         }
 
         /* 체크박스 */
-        .checkbox-group {
+        .checkbox-wrapper {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-top: 8px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
             cursor: pointer;
         }
 
-        .checkbox-item input[type="checkbox"] {
-            width: 14px;
-            height: 14px;
+        .checkbox-wrapper input {
+            width: 16px;
+            height: 16px;
             cursor: pointer;
         }
 
-        .checkbox-item label {
+        .checkbox-label {
             font-size: 11px;
-            color: #666;
-            cursor: pointer;
+            color: #333;
         }
 
         /* 파일 리스트 */
         .file-list {
-            display: none;
             margin-bottom: 30px;
-            background: #fff;
-            border: 1px solid #e6e6e6;
         }
 
         .file-item {
-            padding: 16px 20px;
-            border-bottom: 1px solid #f0f0f0;
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            padding: 20px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.3s ease;
-        }
-
-        .file-item:last-child {
-            border-bottom: none;
+            transition: all 0.3s ease;
         }
 
         .file-item:hover {
-            background: #fafafa;
+            border-color: #d0d0d0;
         }
 
         .file-info {
@@ -330,9 +316,9 @@
         }
 
         .file-name {
-            font-size: 11px;
-            color: #111;
+            font-size: 12px;
             margin-bottom: 4px;
+            color: #111;
         }
 
         .file-size {
@@ -342,144 +328,35 @@
 
         .file-status {
             font-size: 10px;
-            color: #999;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+            padding: 4px 12px;
+            background: #f5f5f5;
+            color: #999;
         }
 
         .file-status.processing {
-            color: #f5a623;
+            background: #f5f5f5;
+            color: #111;
         }
 
         .file-status.complete {
-            color: #4caf50;
+            background: #f0f0f0;
+            color: #666;
         }
 
         .file-status.error {
-            color: #f44336;
-        }
-
-        /* 버튼 */
-        .buttons {
-            display: none;
-            gap: 16px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .btn {
-            padding: 12px 32px;
-            background: #111;
-            color: #fff;
-            border: none;
-            font-size: 10px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            background: #333;
-            transform: translateY(-1px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: #fff;
-            color: #111;
-            border: 1px solid #e6e6e6;
-        }
-
-        .btn-secondary:hover {
             background: #f5f5f5;
-            border-color: #999;
-        }
-
-        /* 통계 */
-        .stats {
-            display: none;
-            background: #fff;
-            padding: 30px;
-            border: 1px solid #e6e6e6;
-            margin-bottom: 30px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
             color: #999;
-            margin-bottom: 8px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 300;
-            color: #111;
-        }
-
-        /* 로딩 */
-        .loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.98);
-            padding: 40px;
-            border: 1px solid #e6e6e6;
-            text-align: center;
-            z-index: 1000;
-            display: none;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #111;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 11px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: #666;
         }
 
         /* 진행률 바 */
         .progress-bar {
-            width: 100%;
-            height: 2px;
-            background: #f0f0f0;
-            margin: 30px 0;
-            position: relative;
             display: none;
+            height: 1px;
+            background: #e6e6e6;
+            margin: 30px 0;
+            overflow: hidden;
         }
 
         .progress-bar.active {
@@ -488,197 +365,187 @@
 
         .progress-fill {
             height: 100%;
-            background: #111;
+            background: #999;
+            transition: width 0.25s ease;
             width: 0;
-            transition: width 0.5s ease;
         }
 
-        /* 메시지 */
-        .success-message {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #111;
-            color: #fff;
-            padding: 12px 20px;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            z-index: 1001;
+        /* 버튼 */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
         }
 
-        .success-message.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 크롭 에디터 스타일 추가 */
-        .crop-editor {
-            display: none;
+        .btn {
+            padding: 12px 40px;
             background: #fff;
             border: 1px solid #e6e6e6;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .crop-editor.active {
-            display: block;
-        }
-
-        .crop-container {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto 30px;
-            background: #f9f9f9;
-            border: 1px solid #e6e6e6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-        }
-
-        .crop-canvas {
-            max-width: 100%;
-            max-height: 600px;
-            display: block;
-            cursor: crosshair;
-        }
-
-        .crop-overlay {
-            position: absolute;
-            border: 2px dashed #111;
-            background: rgba(255, 255, 255, 0.3);
-            pointer-events: none;
-        }
-
-        .crop-handle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #111;
-            border: 2px solid #fff;
-            pointer-events: all;
-            cursor: move;
-        }
-
-        .crop-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
-        .crop-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
-        .crop-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
-        .crop-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
-
-        .crop-controls {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .crop-ratio-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .crop-ratio-btn {
-            padding: 8px 16px;
-            background: #fff;
-            border: 1px solid #e6e6e6;
-            font-size: 11px;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .crop-ratio-btn:hover {
+        .btn:hover {
+            background: #fafafa;
             border-color: #999;
         }
 
-        .crop-ratio-btn.active {
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn.primary {
             background: #111;
             color: #fff;
             border-color: #111;
         }
 
-        .crop-info {
-            text-align: center;
-            font-size: 10px;
-            color: #999;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-top: 10px;
+        .btn.primary:hover {
+            background: #333;
+            border-color: #333;
         }
 
-        /* 미리보기 모달 */
-        .preview-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .preview-modal.active {
+        /* 통계 정보 */
+        .stats {
             display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 40px 0;
+            padding: 30px;
+            background: #fff;
+            border: 1px solid #e6e6e6;
         }
 
-        .preview-content {
-            max-width: 90%;
-            max-height: 90%;
-            position: relative;
+        .stat-item {
+            text-align: center;
         }
 
-        .preview-image {
-            max-width: 100%;
-            max-height: 80vh;
+        .stat-value {
+            font-size: 24px;
+            font-weight: 300;
+            color: #111;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #999;
+        }
+
+        /* 로딩 인디케이터 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.active {
             display: block;
         }
 
-        .preview-close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 30px;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .preview-info {
-            color: #fff;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-        }
-
-        /* Settings 버튼 스타일 */
-        .settings-btn {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            padding: 10px 20px;
-            background: #fff;
+        .spinner {
+            width: 20px;
+            height: 20px;
             border: 1px solid #e6e6e6;
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-top-color: #999;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
         }
 
-        .settings-btn:hover {
-            background: #111;
-            color: #fff;
-            border-color: #111;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 성공 메시지 */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(17,17,17,0.9);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: 400;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* 라벨 툴팁 스타일 */
+        .settings-label[title] {
+            cursor: help;
+            position: relative;
+        }
+
+        /* 모션 선호도 존중 */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+        }
+
+        .loading-text {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #666;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+
+            .tab {
+                border-bottom: 1px solid #e6e6e6;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .language-switch {
+                position: static;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -686,1271 +553,724 @@
     <div class="container">
         <!-- 헤더 -->
         <header>
+            <!-- 언어 전환 버튼 -->
             <div class="language-switch">
+                <button class="lang-btn" data-lang="ja">日本語</button>
                 <button class="lang-btn" data-lang="ko">한국어</button>
-                <button class="lang-btn active" data-lang="en">English</button>
             </div>
-            <h1 id="main-title">OHOTORO HORIE Optimizer</h1>
-            <div class="subtitle" id="main-subtitle">Professional Media Optimization Suite</div>
+            
+            <div style="position: absolute; top: 20px; right: 40px;">
+                <a href="https://admin.cre.ma/v2/review/products" target="_blank" 
+                   style="padding: 8px 20px; background: none; border: 1px solid #e6e6e6; color: #666; text-decoration: none; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.3s ease;"
+                   onmouseover="this.style.borderColor='#111'; this.style.color='#111';" 
+                   onmouseout="this.style.borderColor='#e6e6e6'; this.style.color='#666';">
+                    CREMA
+                </a>
+            </div>
+            
+            <h1 style="font-size: 11px;">OHOTORO COMPRESSOR 🍣</h1>
+            <div class="subtitle i18n" data-i18n="subtitle">Photo / Video Optimizer</div>
+            <div style="margin-top: 12px; font-size: 10px; color: #999; letter-spacing: 0.1em;">
+                <span id="team-message" class="i18n" style="transition: opacity 0.3s ease;"></span>
+            </div>
+            <button id="reset-settings" class="i18n" style="margin-top: 20px; padding: 6px 16px; background: none; border: 1px solid #e6e6e6; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: #999; transition: all 0.3s ease;" 
+                data-i18n="reset_settings"
+                onmouseover="this.style.borderColor='#111'; this.style.color='#111';" 
+                onmouseout="this.style.borderColor='#e6e6e6'; this.style.color='#999';"></button>
         </header>
 
         <!-- 탭 네비게이션 -->
         <div class="tabs">
-            <button class="tab active" data-tab="image">Image</button>
-            <button class="tab" data-tab="video">Video</button>
+            <button class="tab active i18n" data-tab="photo" data-i18n="tab_photo"></button>
+            <button class="tab i18n" data-tab="video" data-i18n="tab_video"></button>
         </div>
 
-        <!-- 이미지 탭 -->
-        <div class="tab-content active" id="image-tab">
+        <!-- Photo 탭 콘텐츠 -->
+        <div id="photo-tab" class="tab-content active">
             <!-- 업로드 영역 -->
-            <div class="upload-area" id="image-upload-area">
-                <div class="upload-icon">📷</div>
-                <div class="upload-text" id="image-upload-text">Drop images here</div>
-                <div class="upload-subtext" id="image-upload-subtext">or click to select</div>
-            </div>
-            <input type="file" id="image-input" accept="image/*" multiple>
-
-            <!-- 크롭 에디터 -->
-            <div class="crop-editor" id="crop-editor">
-                <div class="settings-label" id="crop-label">CROP SETTINGS</div>
-                
-                <div class="crop-controls">
-                    <div class="crop-ratio-group">
-                        <button class="crop-ratio-btn active" data-ratio="5:7">5:7 (Default)</button>
-                        <button class="crop-ratio-btn" data-ratio="free">Free</button>
-                        <button class="crop-ratio-btn" data-ratio="1:1">1:1</button>
-                        <button class="crop-ratio-btn" data-ratio="4:3">4:3</button>
-                        <button class="crop-ratio-btn" data-ratio="16:9">16:9</button>
-                        <button class="crop-ratio-btn" data-ratio="3:2">3:2</button>
-                        <button class="crop-ratio-btn" data-ratio="9:16">9:16</button>
-                    </div>
-                </div>
-
-                <div class="crop-container">
-                    <canvas class="crop-canvas" id="crop-canvas"></canvas>
-                    <div class="crop-overlay" id="crop-overlay">
-                        <div class="crop-handle nw"></div>
-                        <div class="crop-handle ne"></div>
-                        <div class="crop-handle sw"></div>
-                        <div class="crop-handle se"></div>
-                    </div>
-                </div>
-
-                <div class="crop-info" id="crop-info">
-                    <span id="crop-dimensions">0 x 0</span>
-                </div>
-
-                <div class="buttons" style="display: flex; margin-top: 20px;">
-                    <button class="btn btn-secondary" id="crop-preview">Preview</button>
-                    <button class="btn btn-secondary" id="crop-reset">Reset</button>
-                    <button class="btn" id="crop-apply">Apply Crop</button>
-                    <button class="btn btn-secondary" id="crop-skip">Skip Crop</button>
-                </div>
+            <div class="upload-area" id="photo-upload-area">
+                <input type="file" id="photo-input" multiple accept="image/*">
+                <div class="upload-icon" style="font-size: 24px; color: #ccc;">―</div>
+                <div class="upload-text i18n" data-i18n="photo_upload_text"></div>
+                <div class="upload-subtext i18n" data-i18n="photo_upload_subtext"></div>
+                <div style="margin-top: 12px; font-size: 10px; color: #ccc;" class="i18n" data-i18n="multiple_files"></div>
             </div>
 
             <!-- 설정 패널 -->
-            <div class="settings-panel" id="image-settings" style="display: none;">
+            <div class="settings-panel" style="display: none;" id="photo-settings">
                 <!-- 품질 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label" id="quality-label">Quality</label>
-                    <div class="radio-group">
+                    <label class="settings-label i18n" data-i18n="quality"></label>
+                    <div class="radio-group" id="photo-quality">
                         <label class="radio-option">
-                            <input type="radio" name="quality" value="low">
-                            <span id="quality-low">Low (60)</span>
+                            <input type="radio" name="photo-quality" value="90">
+                            <span class="i18n" data-i18n="quality_high"></span>
                         </label>
                         <label class="radio-option selected">
-                            <input type="radio" name="quality" value="medium" checked>
-                            <span id="quality-medium">Medium (80)</span>
+                            <input type="radio" name="photo-quality" value="70" checked>
+                            <span class="i18n" data-i18n="quality_medium"></span>
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="quality" value="high">
-                            <span id="quality-high">High (92)</span>
+                            <input type="radio" name="photo-quality" value="50">
+                            <span class="i18n" data-i18n="quality_low"></span>
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="quality" value="custom">
-                            <span id="quality-custom">Custom</span>
+                            <input type="radio" name="photo-quality" value="30">
+                            <span class="i18n" data-i18n="quality_web"></span>
                         </label>
-                    </div>
-                    <div class="custom-input" id="quality-custom-input">
-                        <input type="number" id="quality-custom-value" min="1" max="100" value="85">
-                        <span>(1-100)</span>
                     </div>
                 </div>
 
-                <!-- 크기 조정 -->
+                <!-- 크기 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label" id="size-label">Max Width</label>
-                    <div class="radio-group">
+                    <label class="settings-label i18n" data-i18n="size"></label>
+                    <div class="radio-group" id="photo-size">
+                        <label class="radio-option">
+                            <input type="radio" name="photo-size" value="original">
+                            <span class="i18n" data-i18n="size_original"></span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="photo-size" value="2000">
+                            2000px
+                        </label>
                         <label class="radio-option selected">
-                            <input type="radio" name="size" value="original" checked>
-                            <span id="size-original">Original</span>
+                            <input type="radio" name="photo-size" value="1500" checked>
+                            1500px
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="size" value="1920">
-                            <span>1920px</span>
+                            <input type="radio" name="photo-size" value="1000">
+                            1000px
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="size" value="1280">
-                            <span>1280px</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="size" value="800">
-                            <span>800px</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="size" value="custom">
-                            <span id="size-custom">Custom</span>
+                            <input type="radio" name="photo-size" value="custom">
+                            <span class="i18n" data-i18n="size_custom"></span>
                         </label>
                     </div>
-                    <div class="custom-input" id="size-custom-input">
-                        <input type="number" id="size-custom-value" min="100" max="5000" value="1600">
+                    <div class="custom-input" id="photo-custom-size">
+                        <input type="number" id="photo-custom-value" placeholder="800" min="100" max="5000">
                         <span>px</span>
                     </div>
                 </div>
 
-                <!-- 포맷 변환 -->
+                <!-- 포맷 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label" id="format-label">Output Format</label>
-                    <div class="radio-group">
+                    <label class="settings-label i18n" data-i18n="format"></label>
+                    <div class="radio-group" id="photo-format">
                         <label class="radio-option selected">
-                            <input type="radio" name="format" value="original" checked>
-                            <span id="format-original">Keep Original</span>
+                            <input type="radio" name="photo-format" value="jpeg" checked>
+                            JPEG
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="format" value="jpeg">
-                            <span>JPEG</span>
+                            <input type="radio" name="photo-format" value="png">
+                            PNG
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="format" value="png">
-                            <span>PNG</span>
+                            <input type="radio" name="photo-format" value="webp">
+                            WebP
                         </label>
-                        <label class="radio-option">
-                            <input type="radio" name="format" value="webp">
-                            <span>WebP</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 추가 옵션 -->
-                <div class="settings-group">
-                    <label class="settings-label" id="options-label">Additional Options</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="remove-metadata">
-                            <label for="remove-metadata" id="metadata-label">Remove metadata</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="progressive" checked>
-                            <label for="progressive" id="progressive-label">Progressive encoding</label>
-                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- 파일 리스트 -->
-            <div class="file-list" id="image-file-list"></div>
-
-            <!-- 버튼들 -->
-            <div class="buttons" id="image-buttons">
-                <button class="btn" id="image-process">Process Images</button>
-                <button class="btn btn-secondary" id="image-clear">Clear All</button>
-                <button class="btn" id="image-download" style="display: none;">Download All</button>
-            </div>
+            <div class="file-list" id="photo-file-list" style="display: none;"></div>
 
             <!-- 진행률 바 -->
-            <div class="progress-bar" id="image-progress">
+            <div class="progress-bar" id="photo-progress">
                 <div class="progress-fill"></div>
             </div>
 
             <!-- 통계 -->
-            <div class="stats" id="image-stats">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-label" id="stat-files">Total Files</div>
-                        <div class="stat-value" id="image-total-files">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label" id="stat-original">Original Size</div>
-                        <div class="stat-value" id="image-original-size">0 MB</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label" id="stat-compressed">Compressed Size</div>
-                        <div class="stat-value" id="image-compressed-size">0 MB</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label" id="stat-saved">Space Saved</div>
-                        <div class="stat-value" id="image-saved">0%</div>
-                    </div>
+            <div class="stats" id="photo-stats" style="display: none;">
+                <div class="stat-item">
+                    <div class="stat-value" id="photo-total-files">0</div>
+                    <div class="stat-label i18n" data-i18n="stat_files"></div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="photo-original-size">0 MB</div>
+                    <div class="stat-label i18n" data-i18n="stat_original_size"></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="photo-compressed-size">0 MB</div>
+                    <div class="stat-label i18n" data-i18n="stat_compressed_size"></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="photo-saved" style="color: #666; font-weight: 400;">0%</div>
+                    <div class="stat-label i18n" data-i18n="stat_saved"></div>
+                </div>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="button-group" id="photo-buttons" style="display: none;">
+                <button class="btn i18n" id="photo-clear" data-i18n="btn_clear"></button>
+                <button class="btn primary i18n" style="background: #ff6100 !important; border-color: #ff6100 !important;" id="photo-process" data-i18n="btn_process"></button>
+                <button class="btn i18n" id="photo-download" style="display: none; background: #111; color: #fff; border-color: #111;" 
+                    data-i18n="btn_download"
+                    onmouseover="this.style.opacity='0.8';" 
+                    onmouseout="this.style.opacity='1';"></button>
             </div>
         </div>
 
-        <!-- 비디오 탭 -->
-        <div class="tab-content" id="video-tab">
+        <!-- Video 탭 콘텐츠 -->
+        <div id="video-tab" class="tab-content">
             <!-- 업로드 영역 -->
             <div class="upload-area" id="video-upload-area">
-                <div class="upload-icon">🎬</div>
-                <div class="upload-text" id="video-upload-text">Drop videos here</div>
-                <div class="upload-subtext" id="video-upload-subtext">or click to select</div>
+                <input type="file" id="video-input" multiple accept="video/*">
+                <div class="upload-icon" style="font-size: 24px; color: #ccc;">―</div>
+                <div class="upload-text i18n" data-i18n="video_upload_text"></div>
+                <div class="upload-subtext i18n" data-i18n="video_upload_subtext"></div>
+                <div style="margin-top: 12px; font-size: 10px; color: #ccc;" class="i18n" data-i18n="multiple_files"></div>
             </div>
-            <input type="file" id="video-input" accept="video/*" multiple>
 
             <!-- 설정 패널 -->
-            <div class="settings-panel" id="video-settings" style="display: none;">
+            <div class="settings-panel" style="display: none;" id="video-settings">
                 <!-- 품질 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label" id="video-quality-label">Video Quality</label>
-                    <div class="radio-group">
+                    <label class="settings-label i18n" data-i18n="quality"></label>
+                    <div class="radio-group" id="video-quality">
                         <label class="radio-option">
-                            <input type="radio" name="video-quality" value="low">
-                            <span id="video-quality-low">Low</span>
+                            <input type="radio" name="video-quality" value="high">
+                            <span class="i18n" data-i18n="quality_high_simple"></span>
                         </label>
                         <label class="radio-option selected">
                             <input type="radio" name="video-quality" value="medium" checked>
-                            <span id="video-quality-medium">Medium</span>
+                            <span class="i18n" data-i18n="quality_medium_simple"></span>
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="video-quality" value="high">
-                            <span id="video-quality-high">High</span>
+                            <input type="radio" name="video-quality" value="low">
+                            <span class="i18n" data-i18n="quality_low_simple"></span>
                         </label>
                     </div>
                 </div>
 
                 <!-- 해상도 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label" id="video-resolution-label">Resolution</label>
-                    <div class="radio-group">
-                        <label class="radio-option selected">
-                            <input type="radio" name="video-resolution" value="original" checked>
-                            <span id="video-resolution-original">Keep Original</span>
+                    <label class="settings-label i18n" data-i18n="resolution"></label>
+                    <div class="radio-group" id="video-resolution">
+                        <label class="radio-option">
+                            <input type="radio" name="video-resolution" value="original">
+                            <span class="i18n" data-i18n="size_original"></span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="video-resolution" value="1080">
-                            <span>1080p</span>
+                            1080p
                         </label>
-                        <label class="radio-option">
-                            <input type="radio" name="video-resolution" value="720">
-                            <span>720p</span>
+                        <label class="radio-option selected">
+                            <input type="radio" name="video-resolution" value="720" checked>
+                            720p
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="video-resolution" value="480">
-                            <span>480p</span>
+                            480p
                         </label>
                     </div>
                 </div>
 
-                <!-- 추가 옵션 -->
+                <!-- 오디오 설정 -->
                 <div class="settings-group">
-                    <label class="settings-label" id="video-options-label">Options</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="remove-audio">
-                            <label for="remove-audio" id="audio-label">Remove audio</label>
-                        </div>
+                    <label class="settings-label i18n" data-i18n="audio"></label>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="remove-audio">
+                        <label for="remove-audio" class="checkbox-label i18n" data-i18n="remove_audio"></label>
                     </div>
                 </div>
             </div>
 
             <!-- 파일 리스트 -->
-            <div class="file-list" id="video-file-list"></div>
-
-            <!-- 버튼들 -->
-            <div class="buttons" id="video-buttons">
-                <button class="btn" id="video-process">Process Videos</button>
-                <button class="btn btn-secondary" id="video-clear">Clear All</button>
-                <button class="btn" id="video-download" style="display: none;">Download All</button>
-            </div>
+            <div class="file-list" id="video-file-list" style="display: none;"></div>
 
             <!-- 진행률 바 -->
             <div class="progress-bar" id="video-progress">
                 <div class="progress-fill"></div>
             </div>
 
+            <!-- 로딩 인디케이터 -->
+            <div class="loading" id="video-loading">
+                <div class="spinner"></div>
+                <div class="loading-text i18n" data-i18n="loading"></div>
+            </div>
+
             <!-- 통계 -->
-            <div class="stats" id="video-stats">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-label">Total Files</div>
-                        <div class="stat-value" id="video-total-files">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Original Size</div>
-                        <div class="stat-value" id="video-original-size">0 MB</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Compressed Size</div>
-                        <div class="stat-value" id="video-compressed-size">0 MB</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Space Saved</div>
-                        <div class="stat-value" id="video-saved">0%</div>
-                    </div>
+            <div class="stats" id="video-stats" style="display: none;">
+                <div class="stat-item">
+                    <div class="stat-value" id="video-total-files">0</div>
+                    <div class="stat-label i18n" data-i18n="stat_files"></div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="video-original-size">0 MB</div>
+                    <div class="stat-label i18n" data-i18n="stat_original_size"></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="video-compressed-size">0 MB</div>
+                    <div class="stat-label i18n" data-i18n="stat_compressed_size"></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="video-saved" style="color: #666; font-weight: 400;">0%</div>
+                    <div class="stat-label i18n" data-i18n="stat_saved"></div>
+                </div>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="button-group" id="video-buttons" style="display: none;">
+                <button class="btn i18n" id="video-clear" data-i18n="btn_clear"></button>
+                <button class="btn primary i18n" id="video-process" data-i18n="btn_process"></button>
+                <button class="btn i18n" id="video-download" style="display: none; background: #111; color: #fff; border-color: #111;"
+                    data-i18n="btn_download"
+                    onmouseover="this.style.opacity='0.8';" 
+                    onmouseout="this.style.opacity='1';"></button>
             </div>
         </div>
     </div>
 
-    <!-- 로딩 표시 -->
-    <div class="loading" id="image-loading">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Processing...</div>
-    </div>
-
-    <div class="loading" id="video-loading">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Processing...</div>
-    </div>
-
-    <!-- 성공 메시지 -->
-    <div class="success-message" id="success-message"></div>
-
-    <!-- 미리보기 모달 -->
-    <div class="preview-modal" id="preview-modal">
-        <div class="preview-content">
-            <button class="preview-close" id="preview-close">×</button>
-            <img class="preview-image" id="preview-image">
-            <div class="preview-info" id="preview-info"></div>
-        </div>
-    </div>
-
-    <!-- Settings 버튼 -->
-    <button class="settings-btn" id="reset-settings">Reset Settings</button>
-
     <script>
-        // ============= 전역 변수 =============
-        let imageFiles = [];
-        let processedImages = [];
-        let videoFiles = [];
-        let processedVideos = [];
-        let ffmpeg = null;
-        let ffmpegLoaded = false;
-        let currentLanguage = 'en';
-        
-        // 크롭 관련 변수
-        let cropEditor = {
-            canvas: null,
-            ctx: null,
-            image: null,
-            currentImageIndex: 0,
-            cropData: [],
-            isDragging: false,
-            isResizing: false,
-            resizeHandle: null,
-            startX: 0,
-            startY: 0,
-            cropX: 0,
-            cropY: 0,
-            cropWidth: 0,
-            cropHeight: 0,
-            aspectRatio: 5/7,
-            currentRatio: '5:7'
-        };
-
-        // ============= 다국어 지원 =============
-        const messages = {
-            ko: {
-                // 헤더
-                main_title: 'OHOTORO HORIE 최적화 도구',
-                main_subtitle: '전문 미디어 최적화 스위트',
-                
-                // 탭
-                tab_image: '이미지',
-                tab_video: '비디오',
-                
-                // 업로드
-                image_upload_text: '이미지를 여기에 놓으세요',
-                image_upload_subtext: '또는 클릭하여 선택',
-                video_upload_text: '비디오를 여기에 놓으세요',
-                video_upload_subtext: '또는 클릭하여 선택',
-                
-                // 크롭
-                crop_label: '크롭 설정',
-                crop_preview: '미리보기',
-                crop_reset: '초기화',
-                crop_apply: '크롭 적용',
-                crop_skip: '크롭 건너뛰기',
-                
-                // 설정 라벨
-                quality_label: '품질',
-                size_label: '최대 너비',
-                format_label: '출력 형식',
-                options_label: '추가 옵션',
-                video_quality_label: '비디오 품질',
-                video_resolution_label: '해상도',
-                video_options_label: '옵션',
-                
-                // 품질 옵션
-                quality_low: '낮음 (60)',
-                quality_medium: '중간 (80)',
-                quality_high: '높음 (92)',
-                quality_custom: '사용자 지정',
-                video_quality_low: '낮음',
-                video_quality_medium: '중간',
-                video_quality_high: '높음',
-                
-                // 크기 옵션
-                size_original: '원본',
-                size_custom: '사용자 지정',
-                
-                // 포맷 옵션
-                format_original: '원본 유지',
-                
-                // 해상도 옵션
-                video_resolution_original: '원본 유지',
-                
-                // 체크박스
-                metadata_label: '메타데이터 제거',
-                progressive_label: '프로그레시브 인코딩',
-                audio_label: '오디오 제거',
-                
-                // 버튼
-                process_images: '이미지 처리',
-                process_videos: '비디오 처리',
-                clear_all: '모두 지우기',
-                download_all: '모두 다운로드',
-                
-                // 통계
-                stat_files: '전체 파일',
-                stat_original: '원본 크기',
-                stat_compressed: '압축 크기',
-                stat_saved: '절약된 공간',
-                
-                // 상태
-                status_waiting: '대기 중',
-                status_processing: '처리 중',
-                status_complete: '완료',
-                status_error: '오류',
-                
-                // 메시지
-                message_ready: 'FFmpeg 로딩 중입니다. 잠시만 기다려주세요.',
-                message_preparing: '다운로드 준비 중...',
-                message_complete: '다운로드 준비 완료!',
-                message_compressed_image: '개 이미지가 압축되었습니다!',
-                message_compressed_video: '개 비디오가 압축되었습니다!',
-                message_initialized: '설정이 초기화되었습니다.',
-                message_reset_confirm: '모든 설정을 초기화하시겠습니까?'
+        // 다국어 번역 데이터
+        const translations = {
+            ja: {
+                subtitle: "Photo / Video Optimizer",
+                reset_settings: "設定を初期化",
+                tab_photo: "画像",
+                tab_video: "動画",
+                photo_upload_text: "画像をここにドラッグ",
+                photo_upload_subtext: "クリックで選択",
+                video_upload_text: "動画をここにドラッグ",
+                video_upload_subtext: "クリックで選択（最大100MB）",
+                multiple_files: "複数可",
+                quality: "品質",
+                quality_high: "高 (90%)",
+                quality_medium: "中 (70%)",
+                quality_low: "低 (50%)",
+                quality_web: "Web (30%)",
+                quality_high_simple: "高",
+                quality_medium_simple: "中",
+                quality_low_simple: "低",
+                size: "サイズ",
+                size_original: "オリジナル",
+                size_custom: "カスタム",
+                format: "形式",
+                resolution: "解像度",
+                audio: "音声",
+                remove_audio: "音声を削除",
+                stat_files: "ファイル数",
+                stat_original_size: "元のサイズ",
+                stat_compressed_size: "圧縮後",
+                stat_saved: "削減率",
+                btn_clear: "全てクリア",
+                btn_process: "実行",
+                btn_download: "一括ダウンロード",
+                loading: "処理中...",
+                status_waiting: "待機",
+                status_processing: "処理中",
+                status_complete: "完了",
+                status_error: "エラー",
+                message_select_valid_image: "有効な画像ファイルを選択してください",
+                message_select_valid_video: "有効な動画ファイルを選択してください（最大100MB）",
+                message_file_too_large: "は100MBを超えています",
+                message_compressed: "件の画像を圧縮しました。",
+                message_compressed_video: "件の動画を圧縮しました。",
+                message_preparing: "準備中...",
+                message_complete: "完了",
+                message_reset_confirm: "設定を初期化しますか？",
+                message_initialized: "初期化しました",
+                message_ready: "準備中です。もう一度お試しください",
+                message_loading_failed: "ビデオ処理の準備に失敗しました",
+                team_messages: [
+                    "静かに整える。確かに進める。",
+                    "軽くして、速くする。",
+                    "細部に、意図を。",
+                    "必要なだけ、十分に。",
+                    "静度と速度のバランス。",
+                    "見えない部分まで、丁寧に。"
+                ]
             },
-            en: {
-                // 헤더
-                main_title: 'OHOTORO HORIE Optimizer',
-                main_subtitle: 'Professional Media Optimization Suite',
-                
-                // 탭
-                tab_image: 'Image',
-                tab_video: 'Video',
-                
-                // 업로드
-                image_upload_text: 'Drop images here',
-                image_upload_subtext: 'or click to select',
-                video_upload_text: 'Drop videos here',
-                video_upload_subtext: 'or click to select',
-                
-                // 크롭
-                crop_label: 'CROP SETTINGS',
-                crop_preview: 'Preview',
-                crop_reset: 'Reset',
-                crop_apply: 'Apply Crop',
-                crop_skip: 'Skip Crop',
-                
-                // 설정 라벨
-                quality_label: 'Quality',
-                size_label: 'Max Width',
-                format_label: 'Output Format',
-                options_label: 'Additional Options',
-                video_quality_label: 'Video Quality',
-                video_resolution_label: 'Resolution',
-                video_options_label: 'Options',
-                
-                // 품질 옵션
-                quality_low: 'Low (60)',
-                quality_medium: 'Medium (80)',
-                quality_high: 'High (92)',
-                quality_custom: 'Custom',
-                video_quality_low: 'Low',
-                video_quality_medium: 'Medium',
-                video_quality_high: 'High',
-                
-                // 크기 옵션
-                size_original: 'Original',
-                size_custom: 'Custom',
-                
-                // 포맷 옵션
-                format_original: 'Keep Original',
-                
-                // 해상도 옵션
-                video_resolution_original: 'Keep Original',
-                
-                // 체크박스
-                metadata_label: 'Remove metadata',
-                progressive_label: 'Progressive encoding',
-                audio_label: 'Remove audio',
-                
-                // 버튼
-                process_images: 'Process Images',
-                process_videos: 'Process Videos',
-                clear_all: 'Clear All',
-                download_all: 'Download All',
-                
-                // 통계
-                stat_files: 'Total Files',
-                stat_original: 'Original Size',
-                stat_compressed: 'Compressed Size',
-                stat_saved: 'Space Saved',
-                
-                // 상태
-                status_waiting: 'Waiting',
-                status_processing: 'Processing',
-                status_complete: 'Complete',
-                status_error: 'Error',
-                
-                // 메시지
-                message_ready: 'FFmpeg is loading. Please wait.',
-                message_preparing: 'Preparing download...',
-                message_complete: 'Download ready!',
-                message_compressed_image: ' images compressed!',
-                message_compressed_video: ' videos compressed!',
-                message_initialized: 'Settings have been reset.',
-                message_reset_confirm: 'Reset all settings?'
+            ko: {
+                subtitle: "사진 / 동영상 최적화",
+                reset_settings: "설정 초기화",
+                tab_photo: "이미지",
+                tab_video: "동영상",
+                photo_upload_text: "이미지를 여기에 드래그",
+                photo_upload_subtext: "클릭하여 선택",
+                video_upload_text: "동영상을 여기에 드래그",
+                video_upload_subtext: "클릭하여 선택 (최대 100MB)",
+                multiple_files: "복수 선택 가능",
+                quality: "품질",
+                quality_high: "높음 (90%)",
+                quality_medium: "중간 (70%)",
+                quality_low: "낮음 (50%)",
+                quality_web: "웹 (30%)",
+                quality_high_simple: "높음",
+                quality_medium_simple: "중간",
+                quality_low_simple: "낮음",
+                size: "크기",
+                size_original: "원본",
+                size_custom: "사용자 지정",
+                format: "형식",
+                resolution: "해상도",
+                audio: "오디오",
+                remove_audio: "오디오 제거",
+                stat_files: "파일 수",
+                stat_original_size: "원본 크기",
+                stat_compressed_size: "압축 후",
+                stat_saved: "절감률",
+                btn_clear: "모두 지우기",
+                btn_process: "실행",
+                btn_download: "일괄 다운로드",
+                loading: "처리 중...",
+                status_waiting: "대기",
+                status_processing: "처리 중",
+                status_complete: "완료",
+                status_error: "오류",
+                message_select_valid_image: "유효한 이미지 파일을 선택해주세요",
+                message_select_valid_video: "유효한 동영상 파일을 선택해주세요 (최대 100MB)",
+                message_file_too_large: "는 100MB를 초과합니다",
+                message_compressed: "개의 이미지를 압축했습니다.",
+                message_compressed_video: "개의 동영상을 압축했습니다.",
+                message_preparing: "준비 중...",
+                message_complete: "완료",
+                message_reset_confirm: "설정을 초기화하시겠습니까?",
+                message_initialized: "초기화되었습니다",
+                message_ready: "준비 중입니다. 다시 시도해주세요",
+                message_loading_failed: "비디오 처리 준비에 실패했습니다",
+                team_messages: [
+                    "우리 스타일로, 조용히 잘 하고 있죠 🙂",
+                    "빠르게보단 단단하게.",
+                    "디테일은 태도에서 온다.",
+                    "대충 안 해요, 자연스럽게 할 뿐.",
+                    "정적과 속도의 균형.",
+                    "보이지 않아도, 느껴지는 완성도.”
+                ]
             }
         };
 
-        // 메시지 가져오기
-        function getMessage(key) {
-            return messages[currentLanguage][key] || messages.en[key] || key;
+        // 현재 언어 상태
+        let currentLang = 'ja';
+        
+        // 언어 설정 로드 및 적용
+        function initLanguage() {
+            // localStorage에서 저장된 언어 확인
+            const savedLang = localStorage.getItem('ohotoro-language');
+            
+            if (savedLang) {
+                currentLang = savedLang;
+            } else {
+                // 브라우저 언어 감지
+                const browserLang = navigator.language || navigator.userLanguage;
+                if (browserLang.startsWith('ko')) {
+                    currentLang = 'ko';
+                } else {
+                    currentLang = 'ja';
+                }
+            }
+            
+            // 언어 적용
+            updateLanguage(currentLang);
+            
+            // 버튼 상태 업데이트
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.lang === currentLang) {
+                    btn.classList.add('active');
+                }
+            });
         }
-
-        // 언어 전환
-        function setLanguage(lang) {
-            currentLanguage = lang;
+        
+        // 언어 업데이트 함수
+        function updateLanguage(lang) {
+            currentLang = lang;
             localStorage.setItem('ohotoro-language', lang);
             
-            // 언어 버튼 업데이트
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.lang === lang);
-            });
+            const trans = translations[lang];
             
-            // UI 텍스트 업데이트
-            updateUIText();
-        }
-
-        // UI 텍스트 업데이트
-        function updateUIText() {
-            // 모든 id가 있는 요소의 텍스트 업데이트
-            const textElements = [
-                'main-title', 'main-subtitle',
-                'image-upload-text', 'image-upload-subtext',
-                'video-upload-text', 'video-upload-subtext',
-                'crop-label', 'quality-label', 'size-label', 'format-label', 'options-label',
-                'video-quality-label', 'video-resolution-label', 'video-options-label',
-                'quality-low', 'quality-medium', 'quality-high', 'quality-custom',
-                'video-quality-low', 'video-quality-medium', 'video-quality-high',
-                'size-original', 'size-custom', 'format-original',
-                'video-resolution-original', 'metadata-label', 'progressive-label', 'audio-label',
-                'stat-files', 'stat-original', 'stat-compressed', 'stat-saved'
-            ];
-            
-            textElements.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    const key = id.replace(/-/g, '_');
-                    const text = getMessage(key);
-                    if (text) element.textContent = text;
+            // data-i18n 속성이 있는 모든 요소 업데이트
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (trans[key]) {
+                    element.textContent = trans[key];
                 }
             });
             
-            // 탭 텍스트 업데이트
-            document.querySelectorAll('.tab').forEach(tab => {
-                const tabName = tab.dataset.tab;
-                tab.textContent = getMessage(`tab_${tabName}`);
-            });
+            // 팀 메시지 업데이트
+            const teamMessageElement = document.getElementById('team-message');
+            if (teamMessageElement && trans.team_messages) {
+                teamMessageElement.textContent = trans.team_messages[0];
+            }
             
-            // 버튼 텍스트 업데이트
-            document.getElementById('image-process').textContent = getMessage('process_images');
-            document.getElementById('video-process').textContent = getMessage('process_videos');
-            document.querySelectorAll('#image-clear, #video-clear').forEach(btn => {
-                btn.textContent = getMessage('clear_all');
-            });
-            document.querySelectorAll('#image-download, #video-download').forEach(btn => {
-                btn.textContent = getMessage('download_all');
-            });
-            
-            // 크롭 버튼 텍스트 업데이트
-            document.getElementById('crop-preview').textContent = getMessage('crop_preview');
-            document.getElementById('crop-reset').textContent = getMessage('crop_reset');
-            document.getElementById('crop-apply').textContent = getMessage('crop_apply');
-            document.getElementById('crop-skip').textContent = getMessage('crop_skip');
+            // 팀 메시지 배열도 업데이트
+            teamMessages = trans.team_messages || [];
         }
-
-        // 언어 초기화
-        function initLanguage() {
-            const savedLang = localStorage.getItem('ohotoro-language') || 'en';
-            setLanguage(savedLang);
+        
+        // 언어별 메시지 가져오기 함수
+        function getMessage(key) {
+            return translations[currentLang][key] || key;
         }
-
-        // 언어 버튼 이벤트
+        
+        // 언어 전환 버튼 이벤트
         document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                setLanguage(btn.dataset.lang);
+            btn.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                
+                // 버튼 상태 업데이트
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 언어 업데이트
+                updateLanguage(lang);
             });
         });
 
-        // ============= 설정 관리 =============
+        // 전역 변수
+        let photoFiles = [];
+        let videoFiles = [];
+        let processedPhotos = [];
+        let processedVideos = [];
+        let ffmpeg = null;
+        let ffmpegLoaded = false;
+
+        // 팀 응원 메시지 로테이션
+        let teamMessages = [];
+        let messageIndex = 0;
+        
+        // 성공 메시지 표시 함수
+        function showSuccessMessage(message) {
+            const div = document.createElement('div');
+            div.className = 'success-message';
+            div.innerHTML = message;
+            document.body.appendChild(div);
+            
+            setTimeout(() => {
+                div.remove();
+            }, 2000);
+        }
+
+        // 팀 메시지 로테이션 (30초마다)
+        setInterval(() => {
+            if (teamMessages.length === 0) return;
+            messageIndex = (messageIndex + 1) % teamMessages.length;
+            const messageElement = document.getElementById('team-message');
+            if (messageElement) {
+                messageElement.style.opacity = '0';
+                setTimeout(() => {
+                    messageElement.textContent = teamMessages[messageIndex];
+                    messageElement.style.opacity = '1';
+                }, 300);
+            }
+        }, 30000);
+
+        // 설정 저장/불러오기
         const settings = {
-            save: function() {
-                const data = {
-                    quality: document.querySelector('input[name="quality"]:checked').value,
-                    qualityCustom: document.getElementById('quality-custom-value').value,
-                    size: document.querySelector('input[name="size"]:checked').value,
-                    sizeCustom: document.getElementById('size-custom-value').value,
-                    format: document.querySelector('input[name="format"]:checked').value,
-                    removeMetadata: document.getElementById('remove-metadata').checked,
-                    progressive: document.getElementById('progressive').checked,
-                    videoQuality: document.querySelector('input[name="video-quality"]:checked')?.value,
-                    videoResolution: document.querySelector('input[name="video-resolution"]:checked')?.value,
-                    removeAudio: document.getElementById('remove-audio').checked
-                };
-                localStorage.setItem('ohotoro-settings', JSON.stringify(data));
+            // 기본값 설정
+            defaults: {
+                photo: {
+                    quality: '70',  // 70%가 기본
+                    size: '1500',    // 1500px가 기본
+                    format: 'jpeg'
+                },
+                video: {
+                    quality: 'medium',  // Medium이 기본
+                    resolution: '720',  // 720p가 기본
+                    removeAudio: false
+                }
             },
             
+            // localStorage에서 설정 불러오기
             load: function() {
                 const saved = localStorage.getItem('ohotoro-settings');
-                if (!saved) return null;
-                
-                try {
+                if (saved) {
                     return JSON.parse(saved);
-                } catch {
-                    return null;
                 }
+                return this.defaults;
             },
             
+            // localStorage에 설정 저장
+            save: function(type, key, value) {
+                const current = this.load();
+                if (!current[type]) current[type] = {};
+                current[type][key] = value;
+                localStorage.setItem('ohotoro-settings', JSON.stringify(current));
+            },
+            
+            // 설정 적용
             apply: function() {
-                const data = this.load();
-                if (!data) return;
+                const saved = this.load();
                 
-                // 이미지 설정
-                if (data.quality) {
-                    document.querySelector(`input[name="quality"][value="${data.quality}"]`).checked = true;
-                    document.querySelectorAll('.radio-option').forEach(opt => {
-                        const radio = opt.querySelector('input[name="quality"]');
-                        opt.classList.toggle('selected', radio && radio.checked);
+                // Photo 설정 적용
+                const photoQuality = document.querySelector(`input[name="photo-quality"][value="${saved.photo.quality}"]`);
+                if (photoQuality) {
+                    photoQuality.checked = true;
+                    photoQuality.closest('.radio-option').classList.add('selected');
+                    // 다른 옵션 선택 해제
+                    document.querySelectorAll('input[name="photo-quality"]').forEach(input => {
+                        if (input !== photoQuality) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
                     });
                 }
                 
-                if (data.qualityCustom) {
-                    document.getElementById('quality-custom-value').value = data.qualityCustom;
-                }
-                
-                if (data.size) {
-                    document.querySelector(`input[name="size"][value="${data.size}"]`).checked = true;
-                    document.querySelectorAll('.radio-option').forEach(opt => {
-                        const radio = opt.querySelector('input[name="size"]');
-                        opt.classList.toggle('selected', radio && radio.checked);
+                const photoSize = document.querySelector(`input[name="photo-size"][value="${saved.photo.size}"]`);
+                if (photoSize) {
+                    photoSize.checked = true;
+                    photoSize.closest('.radio-option').classList.add('selected');
+                    document.querySelectorAll('input[name="photo-size"]').forEach(input => {
+                        if (input !== photoSize) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
                     });
                 }
                 
-                if (data.sizeCustom) {
-                    document.getElementById('size-custom-value').value = data.sizeCustom;
-                }
-                
-                if (data.format) {
-                    document.querySelector(`input[name="format"][value="${data.format}"]`).checked = true;
-                    document.querySelectorAll('.radio-option').forEach(opt => {
-                        const radio = opt.querySelector('input[name="format"]');
-                        opt.classList.toggle('selected', radio && radio.checked);
+                const photoFormat = document.querySelector(`input[name="photo-format"][value="${saved.photo.format}"]`);
+                if (photoFormat) {
+                    photoFormat.checked = true;
+                    photoFormat.closest('.radio-option').classList.add('selected');
+                    document.querySelectorAll('input[name="photo-format"]').forEach(input => {
+                        if (input !== photoFormat) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
                     });
                 }
                 
-                document.getElementById('remove-metadata').checked = data.removeMetadata || false;
-                document.getElementById('progressive').checked = data.progressive !== false;
-                
-                // 비디오 설정
-                if (data.videoQuality) {
-                    const videoQuality = document.querySelector(`input[name="video-quality"][value="${data.videoQuality}"]`);
-                    if (videoQuality) {
-                        videoQuality.checked = true;
-                        document.querySelectorAll('.radio-option').forEach(opt => {
-                            const radio = opt.querySelector('input[name="video-quality"]');
-                            opt.classList.toggle('selected', radio && radio.checked);
-                        });
-                    }
+                // Video 설정 적용
+                const videoQuality = document.querySelector(`input[name="video-quality"][value="${saved.video.quality}"]`);
+                if (videoQuality) {
+                    videoQuality.checked = true;
+                    videoQuality.closest('.radio-option').classList.add('selected');
+                    document.querySelectorAll('input[name="video-quality"]').forEach(input => {
+                        if (input !== videoQuality) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
+                    });
                 }
                 
-                if (data.videoResolution) {
-                    const videoRes = document.querySelector(`input[name="video-resolution"][value="${data.videoResolution}"]`);
-                    if (videoRes) {
-                        videoRes.checked = true;
-                        document.querySelectorAll('.radio-option').forEach(opt => {
-                            const radio = opt.querySelector('input[name="video-resolution"]');
-                            opt.classList.toggle('selected', radio && radio.checked);
-                        });
-                    }
+                const videoResolution = document.querySelector(`input[name="video-resolution"][value="${saved.video.resolution}"]`);
+                if (videoResolution) {
+                    videoResolution.checked = true;
+                    videoResolution.closest('.radio-option').classList.add('selected');
+                    document.querySelectorAll('input[name="video-resolution"]').forEach(input => {
+                        if (input !== videoResolution) {
+                            input.closest('.radio-option').classList.remove('selected');
+                        }
+                    });
                 }
                 
-                document.getElementById('remove-audio').checked = data.removeAudio || false;
+                document.getElementById('remove-audio').checked = saved.video.removeAudio;
             }
         };
 
-        // ============= FFmpeg 초기화 =============
-        async function initFFmpeg() {
-            if (typeof FFmpeg === 'undefined') {
-                console.warn('FFmpeg not loaded');
-                return;
-            }
-            
-            const { createFFmpeg } = FFmpeg;
-            ffmpeg = createFFmpeg({ log: false });
-            
-            try {
-                await ffmpeg.load();
-                ffmpegLoaded = true;
-                console.log('FFmpeg loaded successfully');
-            } catch (error) {
-                console.error('Failed to load FFmpeg:', error);
-            }
-        }
-
-        // FFmpeg 초기화 시작
-        initFFmpeg();
-
-        // ============= 탭 전환 =============
+        // 탭 전환
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                // 모든 탭 비활성화
+                // 탭 활성화 상태 변경
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
-                // 선택된 탭 활성화
                 tab.classList.add('active');
+                
+                // 콘텐츠 전환
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
                 document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
             });
         });
 
-        // ============= 라디오 버튼 스타일 =============
+        // 라디오 버튼 스타일링 및 설정 저장
         document.querySelectorAll('.radio-option').forEach(option => {
             option.addEventListener('click', function() {
-                const input = this.querySelector('input[type="radio"]');
-                if (input) {
-                    // 같은 그룹의 다른 옵션들 비활성화
-                    const groupName = input.name;
-                    document.querySelectorAll(`input[name="${groupName}"]`).forEach(radio => {
-                        radio.closest('.radio-option').classList.remove('selected');
-                    });
-                    
-                    // 현재 옵션 활성화
-                    input.checked = true;
-                    this.classList.add('selected');
-                    
-                    // 커스텀 입력 표시/숨기기
-                    if (input.value === 'custom') {
-                        const customInput = document.getElementById(`${groupName.replace('-', '')}-custom-input`);
-                        if (customInput) customInput.classList.add('active');
+                // 같은 그룹의 다른 옵션들 비활성화
+                const groupName = this.querySelector('input').name;
+                document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => {
+                    input.closest('.radio-option').classList.remove('selected');
+                });
+                // 현재 옵션 활성화
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+
+                // 설정 저장
+                const input = this.querySelector('input');
+                const value = input.value;
+                
+                // Photo 설정 저장
+                if (groupName === 'photo-quality') {
+                    settings.save('photo', 'quality', value);
+                } else if (groupName === 'photo-size') {
+                    settings.save('photo', 'size', value);
+                    // Custom size 입력 표시/숨기기
+                    const customInput = document.getElementById('photo-custom-size');
+                    if (value === 'custom') {
+                        customInput.classList.add('active');
                     } else {
-                        const customInput = document.getElementById(`${groupName.replace('-', '')}-custom-input`);
-                        if (customInput) customInput.classList.remove('active');
+                        customInput.classList.remove('active');
                     }
-                    
-                    // 설정 저장
-                    settings.save();
+                } else if (groupName === 'photo-format') {
+                    settings.save('photo', 'format', value);
+                }
+                
+                // Video 설정 저장
+                else if (groupName === 'video-quality') {
+                    settings.save('video', 'quality', value);
+                } else if (groupName === 'video-resolution') {
+                    settings.save('video', 'resolution', value);
                 }
             });
         });
 
         // 체크박스 변경 시 설정 저장
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', () => settings.save());
+        document.getElementById('remove-audio').addEventListener('change', function() {
+            settings.save('video', 'removeAudio', this.checked);
         });
 
-        // 커스텀 값 변경 시 설정 저장
-        document.querySelectorAll('.custom-input input').forEach(input => {
-            input.addEventListener('input', () => settings.save());
-        });
+        // ============= PHOTO 처리 =============
 
-        // ============= 성공 메시지 표시 =============
-        function showSuccessMessage(text) {
-            const message = document.getElementById('success-message');
-            message.textContent = text;
-            message.classList.add('active');
-            
-            setTimeout(() => {
-                message.classList.remove('active');
-            }, 3000);
-        }
+        // Photo 업로드 영역
+        const photoUploadArea = document.getElementById('photo-upload-area');
+        const photoInput = document.getElementById('photo-input');
 
-        // ============= 이미지 처리 =============
-        
-        // 이미지 업로드 영역
-        const imageUploadArea = document.getElementById('image-upload-area');
-        const imageInput = document.getElementById('image-input');
-
-        // 이미지 업로드 영역 클릭
-        imageUploadArea.addEventListener('click', () => {
-            imageInput.click();
+        // 클릭으로 파일 선택
+        photoUploadArea.addEventListener('click', () => {
+            photoInput.click();
         });
 
         // 드래그 앤 드롭
-        imageUploadArea.addEventListener('dragover', (e) => {
+        photoUploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
-            imageUploadArea.classList.add('dragover');
+            photoUploadArea.classList.add('dragover');
         });
 
-        imageUploadArea.addEventListener('dragleave', () => {
-            imageUploadArea.classList.remove('dragover');
+        photoUploadArea.addEventListener('dragleave', () => {
+            photoUploadArea.classList.remove('dragover');
         });
 
-        imageUploadArea.addEventListener('drop', (e) => {
+        photoUploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
-            imageUploadArea.classList.remove('dragover');
-            
-            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
-            if (files.length > 0) {
-                handleImageFiles(files);
-            }
+            photoUploadArea.classList.remove('dragover');
+            handlePhotoFiles(e.dataTransfer.files);
         });
 
-        // 파일 선택
-        imageInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            handleImageFiles(files);
+        // 파일 입력 변경
+        photoInput.addEventListener('change', (e) => {
+            handlePhotoFiles(e.target.files);
         });
 
-        // 이미지 파일 처리
-        function handleImageFiles(files) {
-            imageFiles = files;
+        // Photo 파일 처리
+        function handlePhotoFiles(files) {
+            photoFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
             
-            // 크롭 데이터 초기화
-            cropEditor.cropData = new Array(files.length).fill(null);
-            cropEditor.currentImageIndex = 0;
-            
-            // 크롭 에디터 표시
-            document.getElementById('crop-editor').classList.add('active');
-            
-            // 첫 번째 이미지 로드
-            loadImageForCrop(0);
-        }
-
-        // 크롭을 위한 이미지 로드
-        function loadImageForCrop(index) {
-            if (index >= imageFiles.length) {
-                // 모든 이미지 크롭 완료
-                finalizeCroppedImages();
+            if (photoFiles.length === 0) {
+                alert(getMessage('message_select_valid_image'));
                 return;
             }
 
-            const file = imageFiles[index];
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    cropEditor.image = img;
-                    cropEditor.currentImageIndex = index;
-                    initializeCropCanvas();
-                };
-                img.src = e.target.result;
-            };
-
-            reader.readAsDataURL(file);
-        }
-
-        // 크롭 캔버스 초기화
-        function initializeCropCanvas() {
-            cropEditor.canvas = document.getElementById('crop-canvas');
-            cropEditor.ctx = cropEditor.canvas.getContext('2d');
-
-            const container = document.querySelector('.crop-container');
-            const maxWidth = container.clientWidth - 60;
-            const maxHeight = 600;
-
-            let scale = 1;
-            if (cropEditor.image.width > maxWidth) {
-                scale = maxWidth / cropEditor.image.width;
-            }
-            if (cropEditor.image.height * scale > maxHeight) {
-                scale = maxHeight / cropEditor.image.height;
-            }
-
-            cropEditor.canvas.width = cropEditor.image.width * scale;
-            cropEditor.canvas.height = cropEditor.image.height * scale;
-
-            // 이미지 그리기
-            cropEditor.ctx.drawImage(cropEditor.image, 0, 0, cropEditor.canvas.width, cropEditor.canvas.height);
-
-            // 기본 크롭 영역 설정 (5:7 비율)
-            if (!cropEditor.cropData[cropEditor.currentImageIndex]) {
-                setCropAreaByRatio();
-            } else {
-                // 저장된 크롭 데이터 적용
-                const data = cropEditor.cropData[cropEditor.currentImageIndex];
-                cropEditor.cropX = data.x * (cropEditor.canvas.width / cropEditor.image.width);
-                cropEditor.cropY = data.y * (cropEditor.canvas.height / cropEditor.image.height);
-                cropEditor.cropWidth = data.width * (cropEditor.canvas.width / cropEditor.image.width);
-                cropEditor.cropHeight = data.height * (cropEditor.canvas.height / cropEditor.image.height);
-            }
-
-            updateCropOverlay();
-            updateCropInfo();
-        }
-
-        // 비율에 따른 크롭 영역 설정
-        function setCropAreaByRatio() {
-            const canvasWidth = cropEditor.canvas.width;
-            const canvasHeight = cropEditor.canvas.height;
-
-            if (cropEditor.currentRatio === 'free') {
-                cropEditor.cropWidth = canvasWidth * 0.8;
-                cropEditor.cropHeight = canvasHeight * 0.8;
-            } else {
-                if (canvasWidth / canvasHeight > cropEditor.aspectRatio) {
-                    cropEditor.cropHeight = canvasHeight * 0.8;
-                    cropEditor.cropWidth = cropEditor.cropHeight * cropEditor.aspectRatio;
-                } else {
-                    cropEditor.cropWidth = canvasWidth * 0.8;
-                    cropEditor.cropHeight = cropEditor.cropWidth / cropEditor.aspectRatio;
-                }
-            }
-
-            cropEditor.cropX = (canvasWidth - cropEditor.cropWidth) / 2;
-            cropEditor.cropY = (canvasHeight - cropEditor.cropHeight) / 2;
-        }
-
-        // 크롭 오버레이 업데이트
-        function updateCropOverlay() {
-            const overlay = document.getElementById('crop-overlay');
-            overlay.style.left = cropEditor.cropX + 'px';
-            overlay.style.top = cropEditor.cropY + 'px';
-            overlay.style.width = cropEditor.cropWidth + 'px';
-            overlay.style.height = cropEditor.cropHeight + 'px';
-        }
-
-        // 크롭 정보 업데이트
-        function updateCropInfo() {
-            const scale = cropEditor.image.width / cropEditor.canvas.width;
-            const actualWidth = Math.round(cropEditor.cropWidth * scale);
-            const actualHeight = Math.round(cropEditor.cropHeight * scale);
-            document.getElementById('crop-dimensions').textContent = `${actualWidth} x ${actualHeight}`;
-        }
-
-        // 크롭 비율 버튼 이벤트
-        document.querySelectorAll('.crop-ratio-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.crop-ratio-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-
-                cropEditor.currentRatio = this.dataset.ratio;
-
-                switch (this.dataset.ratio) {
-                    case 'free':
-                        cropEditor.aspectRatio = null;
-                        break;
-                    case '1:1':
-                        cropEditor.aspectRatio = 1;
-                        break;
-                    case '4:3':
-                        cropEditor.aspectRatio = 4/3;
-                        break;
-                    case '16:9':
-                        cropEditor.aspectRatio = 16/9;
-                        break;
-                    case '3:2':
-                        cropEditor.aspectRatio = 3/2;
-                        break;
-                    case '9:16':
-                        cropEditor.aspectRatio = 9/16;
-                        break;
-                    case '5:7':
-                    default:
-                        cropEditor.aspectRatio = 5/7;
-                        break;
-                }
-
-                if (cropEditor.aspectRatio) {
-                    // 현재 중심점 유지하며 비율 조정
-                    const centerX = cropEditor.cropX + cropEditor.cropWidth / 2;
-                    const centerY = cropEditor.cropY + cropEditor.cropHeight / 2;
-
-                    if (cropEditor.cropWidth / cropEditor.cropHeight > cropEditor.aspectRatio) {
-                        cropEditor.cropWidth = cropEditor.cropHeight * cropEditor.aspectRatio;
-                    } else {
-                        cropEditor.cropHeight = cropEditor.cropWidth / cropEditor.aspectRatio;
-                    }
-
-                    cropEditor.cropX = centerX - cropEditor.cropWidth / 2;
-                    cropEditor.cropY = centerY - cropEditor.cropHeight / 2;
-
-                    // 경계 체크
-                    if (cropEditor.cropX < 0) cropEditor.cropX = 0;
-                    if (cropEditor.cropY < 0) cropEditor.cropY = 0;
-                    if (cropEditor.cropX + cropEditor.cropWidth > cropEditor.canvas.width) {
-                        cropEditor.cropX = cropEditor.canvas.width - cropEditor.cropWidth;
-                    }
-                    if (cropEditor.cropY + cropEditor.cropHeight > cropEditor.canvas.height) {
-                        cropEditor.cropY = cropEditor.canvas.height - cropEditor.cropHeight;
-                    }
-
-                    updateCropOverlay();
-                    updateCropInfo();
-                }
-            });
-        });
-
-        // 크롭 영역 드래그 이벤트
-        document.getElementById('crop-canvas').addEventListener('mousedown', function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            // 크롭 영역 내부 클릭 확인
-            if (x >= cropEditor.cropX && x <= cropEditor.cropX + cropEditor.cropWidth &&
-                y >= cropEditor.cropY && y <= cropEditor.cropY + cropEditor.cropHeight) {
-                cropEditor.isDragging = true;
-                cropEditor.startX = x - cropEditor.cropX;
-                cropEditor.startY = y - cropEditor.cropY;
-                e.preventDefault();
-            }
-        });
-
-        document.addEventListener('mousemove', function(e) {
-            if (cropEditor.isDragging) {
-                const canvas = cropEditor.canvas;
-                const rect = canvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                cropEditor.cropX = x - cropEditor.startX;
-                cropEditor.cropY = y - cropEditor.startY;
-
-                // 경계 체크
-                if (cropEditor.cropX < 0) cropEditor.cropX = 0;
-                if (cropEditor.cropY < 0) cropEditor.cropY = 0;
-                if (cropEditor.cropX + cropEditor.cropWidth > canvas.width) {
-                    cropEditor.cropX = canvas.width - cropEditor.cropWidth;
-                }
-                if (cropEditor.cropY + cropEditor.cropHeight > canvas.height) {
-                    cropEditor.cropY = canvas.height - cropEditor.cropHeight;
-                }
-
-                updateCropOverlay();
-                updateCropInfo();
-            }
-        });
-
-        document.addEventListener('mouseup', function() {
-            cropEditor.isDragging = false;
-        });
-
-        // 크롭 핸들 리사이즈 이벤트
-        document.querySelectorAll('.crop-handle').forEach(handle => {
-            handle.addEventListener('mousedown', function(e) {
-                e.stopPropagation();
-                cropEditor.isResizing = true;
-                cropEditor.resizeHandle = this.className.split(' ')[1];
-                cropEditor.startX = e.clientX;
-                cropEditor.startY = e.clientY;
-                cropEditor.startWidth = cropEditor.cropWidth;
-                cropEditor.startHeight = cropEditor.cropHeight;
-                cropEditor.startCropX = cropEditor.cropX;
-                cropEditor.startCropY = cropEditor.cropY;
-                e.preventDefault();
-            });
-        });
-
-        document.addEventListener('mousemove', function(e) {
-            if (cropEditor.isResizing) {
-                const dx = e.clientX - cropEditor.startX;
-                const dy = e.clientY - cropEditor.startY;
-
-                switch (cropEditor.resizeHandle) {
-                    case 'se':
-                        if (cropEditor.currentRatio === 'free') {
-                            cropEditor.cropWidth = Math.max(50, cropEditor.startWidth + dx);
-                            cropEditor.cropHeight = Math.max(50, cropEditor.startHeight + dy);
-                        } else {
-                            const newWidth = Math.max(50, cropEditor.startWidth + dx);
-                            const newHeight = Math.max(50, cropEditor.startHeight + dy);
-                            
-                            if (Math.abs(dx) > Math.abs(dy)) {
-                                cropEditor.cropWidth = newWidth;
-                                cropEditor.cropHeight = newWidth / cropEditor.aspectRatio;
-                            } else {
-                                cropEditor.cropHeight = newHeight;
-                                cropEditor.cropWidth = newHeight * cropEditor.aspectRatio;
-                            }
-                        }
-                        break;
-                    case 'sw':
-                        if (cropEditor.currentRatio === 'free') {
-                            cropEditor.cropWidth = Math.max(50, cropEditor.startWidth - dx);
-                            cropEditor.cropHeight = Math.max(50, cropEditor.startHeight + dy);
-                            cropEditor.cropX = cropEditor.startCropX + dx;
-                        } else {
-                            const newWidth = Math.max(50, cropEditor.startWidth - dx);
-                            const newHeight = Math.max(50, cropEditor.startHeight + dy);
-                            
-                            if (Math.abs(dx) > Math.abs(dy)) {
-                                cropEditor.cropWidth = newWidth;
-                                cropEditor.cropHeight = newWidth / cropEditor.aspectRatio;
-                            } else {
-                                cropEditor.cropHeight = newHeight;
-                                cropEditor.cropWidth = newHeight * cropEditor.aspectRatio;
-                            }
-                            cropEditor.cropX = cropEditor.startCropX + cropEditor.startWidth - cropEditor.cropWidth;
-                        }
-                        break;
-                    case 'ne':
-                        if (cropEditor.currentRatio === 'free') {
-                            cropEditor.cropWidth = Math.max(50, cropEditor.startWidth + dx);
-                            cropEditor.cropHeight = Math.max(50, cropEditor.startHeight - dy);
-                            cropEditor.cropY = cropEditor.startCropY + dy;
-                        } else {
-                            const newWidth = Math.max(50, cropEditor.startWidth + dx);
-                            const newHeight = Math.max(50, cropEditor.startHeight - dy);
-                            
-                            if (Math.abs(dx) > Math.abs(dy)) {
-                                cropEditor.cropWidth = newWidth;
-                                cropEditor.cropHeight = newWidth / cropEditor.aspectRatio;
-                            } else {
-                                cropEditor.cropHeight = newHeight;
-                                cropEditor.cropWidth = newHeight * cropEditor.aspectRatio;
-                            }
-                            cropEditor.cropY = cropEditor.startCropY + cropEditor.startHeight - cropEditor.cropHeight;
-                        }
-                        break;
-                    case 'nw':
-                        if (cropEditor.currentRatio === 'free') {
-                            cropEditor.cropWidth = Math.max(50, cropEditor.startWidth - dx);
-                            cropEditor.cropHeight = Math.max(50, cropEditor.startHeight - dy);
-                            cropEditor.cropX = cropEditor.startCropX + dx;
-                            cropEditor.cropY = cropEditor.startCropY + dy;
-                        } else {
-                            const newWidth = Math.max(50, cropEditor.startWidth - dx);
-                            const newHeight = Math.max(50, cropEditor.startHeight - dy);
-                            
-                            if (Math.abs(dx) > Math.abs(dy)) {
-                                cropEditor.cropWidth = newWidth;
-                                cropEditor.cropHeight = newWidth / cropEditor.aspectRatio;
-                            } else {
-                                cropEditor.cropHeight = newHeight;
-                                cropEditor.cropWidth = newHeight * cropEditor.aspectRatio;
-                            }
-                            cropEditor.cropX = cropEditor.startCropX + cropEditor.startWidth - cropEditor.cropWidth;
-                            cropEditor.cropY = cropEditor.startCropY + cropEditor.startHeight - cropEditor.cropHeight;
-                        }
-                        break;
-                }
-
-                // 경계 체크
-                if (cropEditor.cropX < 0) cropEditor.cropX = 0;
-                if (cropEditor.cropY < 0) cropEditor.cropY = 0;
-                if (cropEditor.cropX + cropEditor.cropWidth > cropEditor.canvas.width) {
-                    cropEditor.cropWidth = cropEditor.canvas.width - cropEditor.cropX;
-                    if (cropEditor.aspectRatio) {
-                        cropEditor.cropHeight = cropEditor.cropWidth / cropEditor.aspectRatio;
-                    }
-                }
-                if (cropEditor.cropY + cropEditor.cropHeight > cropEditor.canvas.height) {
-                    cropEditor.cropHeight = cropEditor.canvas.height - cropEditor.cropY;
-                    if (cropEditor.aspectRatio) {
-                        cropEditor.cropWidth = cropEditor.cropHeight * cropEditor.aspectRatio;
-                    }
-                }
-
-                updateCropOverlay();
-                updateCropInfo();
-            }
-        });
-
-        document.addEventListener('mouseup', function() {
-            cropEditor.isResizing = false;
-            cropEditor.resizeHandle = null;
-        });
-
-        // 크롭 미리보기
-        document.getElementById('crop-preview').addEventListener('click', function() {
-            const scale = cropEditor.image.width / cropEditor.canvas.width;
-            const cropX = cropEditor.cropX * scale;
-            const cropY = cropEditor.cropY * scale;
-            const cropWidth = cropEditor.cropWidth * scale;
-            const cropHeight = cropEditor.cropHeight * scale;
-
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = cropWidth;
-            tempCanvas.height = cropHeight;
-            const tempCtx = tempCanvas.getContext('2d');
-
-            tempCtx.drawImage(cropEditor.image, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
-
-            const modal = document.getElementById('preview-modal');
-            const previewImage = document.getElementById('preview-image');
-            const previewInfo = document.getElementById('preview-info');
-
-            previewImage.src = tempCanvas.toDataURL('image/png');
-            previewInfo.textContent = `${Math.round(cropWidth)} x ${Math.round(cropHeight)} pixels`;
-            modal.classList.add('active');
-        });
-
-        // 미리보기 모달 닫기
-        document.getElementById('preview-close').addEventListener('click', function() {
-            document.getElementById('preview-modal').classList.remove('active');
-        });
-
-        document.getElementById('preview-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('active');
-            }
-        });
-
-        // 크롭 리셋
-        document.getElementById('crop-reset').addEventListener('click', function() {
-            setCropAreaByRatio();
-            updateCropOverlay();
-            updateCropInfo();
-        });
-
-        // 크롭 적용
-        document.getElementById('crop-apply').addEventListener('click', function() {
-            // 현재 이미지의 크롭 데이터 저장
-            const scale = cropEditor.image.width / cropEditor.canvas.width;
-            cropEditor.cropData[cropEditor.currentImageIndex] = {
-                x: cropEditor.cropX * scale,
-                y: cropEditor.cropY * scale,
-                width: cropEditor.cropWidth * scale,
-                height: cropEditor.cropHeight * scale
-            };
-
-            // 다음 이미지로
-            cropEditor.currentImageIndex++;
-            loadImageForCrop(cropEditor.currentImageIndex);
-        });
-
-        // 크롭 건너뛰기
-        document.getElementById('crop-skip').addEventListener('click', function() {
-            // 크롭 데이터 없이 다음 이미지로
-            cropEditor.cropData[cropEditor.currentImageIndex] = null;
-            
-            // 다음 이미지로
-            cropEditor.currentImageIndex++;
-            loadImageForCrop(cropEditor.currentImageIndex);
-        });
-
-        // 크롭 완료 후 이미지 처리
-        function finalizeCroppedImages() {
-            document.getElementById('crop-editor').classList.remove('active');
-            
             // UI 업데이트
-            document.getElementById('image-settings').style.display = 'block';
-            document.getElementById('image-file-list').style.display = 'block';
-            document.getElementById('image-buttons').style.display = 'flex';
+            document.getElementById('photo-settings').style.display = 'block';
+            document.getElementById('photo-file-list').style.display = 'block';
+            document.getElementById('photo-buttons').style.display = 'flex';
             
             // 파일 리스트 표시
-            displayImageFiles();
+            displayPhotoFiles();
         }
 
-        // 이미지 파일 리스트 표시
-        function displayImageFiles() {
-            const fileList = document.getElementById('image-file-list');
+        // Photo 파일 리스트 표시
+        function displayPhotoFiles() {
+            const fileList = document.getElementById('photo-file-list');
             fileList.innerHTML = '';
             
-            imageFiles.forEach((file, index) => {
+            photoFiles.forEach((file, index) => {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
                 fileItem.innerHTML = `
@@ -1958,41 +1278,42 @@
                         <div class="file-name">${file.name}</div>
                         <div class="file-size">${formatFileSize(file.size)}</div>
                     </div>
-                    <div class="file-status" id="status-${index}">${getMessage('status_waiting')}</div>
+                    <div class="file-status" id="photo-status-${index}">${getMessage('status_waiting')}</div>
                 `;
                 fileList.appendChild(fileItem);
             });
         }
 
-        // 이미지 처리 버튼
-        document.getElementById('image-process').addEventListener('click', async () => {
-            const quality = document.querySelector('input[name="quality"]:checked').value;
-            const size = document.querySelector('input[name="size"]:checked').value;
-            const format = document.querySelector('input[name="format"]:checked').value;
-            const removeMetadata = document.getElementById('remove-metadata').checked;
-            const progressive = document.getElementById('progressive').checked;
+        // Photo 처리 버튼
+        document.getElementById('photo-process').addEventListener('click', async () => {
+            const quality = parseInt(document.querySelector('input[name="photo-quality"]:checked').value);
+            const sizeOption = document.querySelector('input[name="photo-size"]:checked').value;
+            const format = document.querySelector('input[name="photo-format"]:checked').value;
             
-            // 로딩 표시
-            const loading = document.getElementById('image-loading');
-            const progressBar = document.getElementById('image-progress');
+            let maxSize = null;
+            if (sizeOption === 'custom') {
+                maxSize = parseInt(document.getElementById('photo-custom-value').value) || 1000;
+            } else if (sizeOption !== 'original') {
+                maxSize = parseInt(sizeOption);
+            }
+
+            // 진행률 표시
+            const progressBar = document.getElementById('photo-progress');
             progressBar.classList.add('active');
             
-            processedImages = [];
+            processedPhotos = [];
             let totalOriginalSize = 0;
             let totalCompressedSize = 0;
 
-            for (let i = 0; i < imageFiles.length; i++) {
-                const file = imageFiles[i];
-                const statusElement = document.getElementById(`status-${i}`);
+            for (let i = 0; i < photoFiles.length; i++) {
+                const file = photoFiles[i];
+                const statusElement = document.getElementById(`photo-status-${i}`);
                 statusElement.textContent = getMessage('status_processing');
                 statusElement.className = 'file-status processing';
-                
-                loading.classList.add('active');
-                loading.querySelector('.loading-text').textContent = `${getMessage('status_processing')}: ${file.name}`;
 
                 try {
-                    const processed = await processImage(file, i, quality, size, format, removeMetadata, progressive);
-                    processedImages.push(processed);
+                    const processed = await processImage(file, quality, maxSize, format);
+                    processedPhotos.push(processed);
                     
                     totalOriginalSize += file.size;
                     totalCompressedSize += processed.blob.size;
@@ -2006,169 +1327,114 @@
                 }
 
                 // 진행률 업데이트
-                const progress = ((i + 1) / imageFiles.length) * 100;
+                const progress = ((i + 1) / photoFiles.length) * 100;
                 progressBar.querySelector('.progress-fill').style.width = progress + '%';
             }
 
-            loading.classList.remove('active');
-            
             // 통계 표시
-            displayImageStats(totalOriginalSize, totalCompressedSize);
+            displayPhotoStats(totalOriginalSize, totalCompressedSize);
             
             // 성공 메시지 표시
-            showSuccessMessage(`${imageFiles.length}${getMessage('message_compressed_image')}`);
+            showSuccessMessage(`${photoFiles.length}${getMessage('message_compressed')}`);
             
             // 다운로드 버튼 표시
-            document.getElementById('image-download').style.display = 'inline-block';
+            document.getElementById('photo-download').style.display = 'inline-block';
             progressBar.classList.remove('active');
         });
 
         // 이미지 처리 함수
-        async function processImage(file, index, quality, size, format, removeMetadata, progressive) {
+        async function processImage(file, quality, maxSize, format) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                
-                reader.onload = function(e) {
+                reader.onload = (e) => {
                     const img = new Image();
-                    
-                    img.onload = function() {
+                    img.onload = () => {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
+                        // 크기 계산 - 비율 유지하며 리사이징
                         let width = img.width;
                         let height = img.height;
                         
-                        // 크롭 적용
-                        const cropData = cropEditor.cropData[index];
-                        if (cropData) {
-                            canvas.width = cropData.width;
-                            canvas.height = cropData.height;
-                            ctx.drawImage(img, cropData.x, cropData.y, cropData.width, cropData.height, 0, 0, cropData.width, cropData.height);
-                            
-                            // 크롭 후 이미지로 업데이트
-                            const tempImg = new Image();
-                            tempImg.onload = function() {
-                                width = tempImg.width;
-                                height = tempImg.height;
-                                
-                                // 크기 조정 적용
-                                applyResize();
-                            };
-                            tempImg.src = canvas.toDataURL('image/png');
-                        } else {
-                            // 크기 조정 적용
-                            applyResize();
+                        if (maxSize && maxSize !== null) {
+                            // 가로와 세로 중 큰 값을 기준으로 비율 계산
+                            if (width > height) {
+                                // 가로가 더 긴 경우
+                                if (width > maxSize) {
+                                    height = Math.round((height * maxSize) / width);
+                                    width = maxSize;
+                                }
+                            } else {
+                                // 세로가 더 길거나 같은 경우
+                                if (height > maxSize) {
+                                    width = Math.round((width * maxSize) / height);
+                                    height = maxSize;
+                                }
+                            }
                         }
                         
-                        function applyResize() {
-                            // 크기 조정
-                            let maxWidth = size === 'original' ? width : parseInt(size);
-                            if (size === 'custom') {
-                                maxWidth = parseInt(document.getElementById('size-custom-value').value);
-                            }
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // 이미지 그리기
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // 포맷별 MIME 타입 설정
+                        let mimeType = 'image/jpeg';
+                        if (format === 'png') mimeType = 'image/png';
+                        if (format === 'webp') mimeType = 'image/webp';
+                        
+                        // Blob으로 변환
+                        canvas.toBlob((blob) => {
+                            // 파일명 생성 - 원본 이름 그대로 사용, 확장자만 변경
+                            const extension = format === 'jpeg' ? 'jpg' : format;
+                            const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                            const fileName = `${baseName}.${extension}`;
                             
-                            if (width > maxWidth) {
-                                const ratio = maxWidth / width;
-                                width = maxWidth;
-                                height = Math.round(height * ratio);
-                            }
-                            
-                            canvas.width = width;
-                            canvas.height = height;
-                            
-                            // 이미지 그리기
-                            if (cropData) {
-                                // 크롭된 이미지 다시 그리기
-                                const tempCanvas = document.createElement('canvas');
-                                tempCanvas.width = cropData.width;
-                                tempCanvas.height = cropData.height;
-                                const tempCtx = tempCanvas.getContext('2d');
-                                tempCtx.drawImage(img, cropData.x, cropData.y, cropData.width, cropData.height, 0, 0, cropData.width, cropData.height);
-                                
-                                ctx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, width, height);
-                            } else {
-                                ctx.drawImage(img, 0, 0, width, height);
-                            }
-                            
-                            // 품질 설정
-                            let qualityValue = 0.8;
-                            if (quality === 'low') qualityValue = 0.6;
-                            else if (quality === 'high') qualityValue = 0.92;
-                            else if (quality === 'custom') {
-                                qualityValue = parseInt(document.getElementById('quality-custom-value').value) / 100;
-                            }
-                            
-                            // 포맷 결정
-                            let outputFormat = format;
-                            if (format === 'original') {
-                                outputFormat = file.type.includes('png') ? 'png' : 
-                                              file.type.includes('webp') ? 'webp' : 'jpeg';
-                            }
-                            
-                            // 블롭 생성
-                            canvas.toBlob(function(blob) {
-                                if (blob) {
-                                    // 파일명 생성
-                                    const extension = outputFormat === 'jpeg' ? 'jpg' : outputFormat;
-                                    const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-                                    const fileName = `${baseName}.${extension}`;
-                                    
-                                    resolve({
-                                        blob: blob,
-                                        name: fileName,
-                                        originalName: file.name
-                                    });
-                                } else {
-                                    reject(new Error('Failed to create blob'));
-                                }
-                            }, `image/${outputFormat}`, qualityValue);
-                        }
+                            resolve({
+                                blob: blob,
+                                name: fileName,
+                                originalName: file.name
+                            });
+                        }, mimeType, quality / 100);
                     };
-                    
-                    img.onerror = function() {
-                        reject(new Error('Failed to load image'));
-                    };
-                    
+                    img.onerror = reject;
                     img.src = e.target.result;
                 };
-                
-                reader.onerror = function() {
-                    reject(new Error('Failed to read file'));
-                };
-                
+                reader.onerror = reject;
                 reader.readAsDataURL(file);
             });
         }
 
-        // 이미지 통계 표시
-        function displayImageStats(originalSize, compressedSize) {
-            document.getElementById('image-stats').style.display = 'flex';
-            document.getElementById('image-total-files').textContent = imageFiles.length;
-            document.getElementById('image-original-size').textContent = formatFileSize(originalSize);
-            document.getElementById('image-compressed-size').textContent = formatFileSize(compressedSize);
+        // Photo 통계 표시
+        function displayPhotoStats(originalSize, compressedSize) {
+            document.getElementById('photo-stats').style.display = 'flex';
+            document.getElementById('photo-total-files').textContent = photoFiles.length;
+            document.getElementById('photo-original-size').textContent = formatFileSize(originalSize);
+            document.getElementById('photo-compressed-size').textContent = formatFileSize(compressedSize);
             
             const savedPercentage = Math.round((1 - compressedSize / originalSize) * 100);
-            document.getElementById('image-saved').textContent = savedPercentage + '%';
+            document.getElementById('photo-saved').textContent = savedPercentage + '%';
         }
 
-        // 이미지 다운로드
-        document.getElementById('image-download').addEventListener('click', async () => {
-            if (processedImages.length === 0) return;
+        // Photo 다운로드
+        document.getElementById('photo-download').addEventListener('click', async () => {
+            if (processedPhotos.length === 0) return;
             
             showSuccessMessage(getMessage('message_preparing'));
             
-            if (processedImages.length === 1) {
+            if (processedPhotos.length === 1) {
                 // 단일 파일 다운로드
-                downloadFile(processedImages[0].blob, processedImages[0].name);
+                downloadFile(processedPhotos[0].blob, processedPhotos[0].name);
             } else {
                 // ZIP으로 다운로드
                 const zip = new JSZip();
-                processedImages.forEach(img => {
-                    zip.file(img.name, img.blob);
+                processedPhotos.forEach(photo => {
+                    zip.file(photo.name, photo.blob);
                 });
                 
                 const zipBlob = await zip.generateAsync({type: 'blob'});
-                downloadFile(zipBlob, 'images.zip');
+                downloadFile(zipBlob, 'photos.zip');
             }
             
             setTimeout(() => {
@@ -2176,28 +1442,50 @@
             }, 1000);
         });
 
-        // 이미지 초기화
-        document.getElementById('image-clear').addEventListener('click', () => {
-            imageFiles = [];
-            processedImages = [];
-            cropEditor.cropData = [];
-            cropEditor.currentImageIndex = 0;
-            document.getElementById('crop-editor').classList.remove('active');
-            document.getElementById('image-settings').style.display = 'none';
-            document.getElementById('image-file-list').style.display = 'none';
-            document.getElementById('image-stats').style.display = 'none';
-            document.getElementById('image-buttons').style.display = 'none';
-            document.getElementById('image-download').style.display = 'none';
-            imageInput.value = '';
+        // Photo 초기화
+        document.getElementById('photo-clear').addEventListener('click', () => {
+            photoFiles = [];
+            processedPhotos = [];
+            document.getElementById('photo-settings').style.display = 'none';
+            document.getElementById('photo-file-list').style.display = 'none';
+            document.getElementById('photo-stats').style.display = 'none';
+            document.getElementById('photo-buttons').style.display = 'none';
+            document.getElementById('photo-download').style.display = 'none';
+            photoInput.value = '';
         });
 
-        // ============= 비디오 처리 =============
-        
-        // 비디오 업로드 영역
+        // ============= VIDEO 처리 =============
+
+        // FFmpeg 초기화
+        async function loadFFmpeg() {
+            if (ffmpegLoaded) return;
+            
+            const loading = document.getElementById('video-loading');
+            loading.classList.add('active');
+            loading.querySelector('.loading-text').textContent = getMessage('message_preparing');
+            
+            try {
+                ffmpeg = FFmpeg.createFFmpeg({
+                    log: false,
+                    corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js'
+                });
+                
+                await ffmpeg.load();
+                ffmpegLoaded = true;
+                console.log('Video processor ready');
+            } catch (error) {
+                console.error('Failed to load FFmpeg:', error);
+                alert(getMessage('message_loading_failed'));
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+
+        // Video 업로드 영역
         const videoUploadArea = document.getElementById('video-upload-area');
         const videoInput = document.getElementById('video-input');
 
-        // 비디오 업로드 영역 클릭
+        // 클릭으로 파일 선택
         videoUploadArea.addEventListener('click', () => {
             videoInput.click();
         });
@@ -2215,23 +1503,33 @@
         videoUploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             videoUploadArea.classList.remove('dragover');
-            
-            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('video/'));
-            if (files.length > 0) {
-                handleVideoFiles(files);
-            }
+            handleVideoFiles(e.dataTransfer.files);
         });
 
-        // 파일 선택
+        // 파일 입력 변경
         videoInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            handleVideoFiles(files);
+            handleVideoFiles(e.target.files);
         });
 
-        // 비디오 파일 처리
-        function handleVideoFiles(files) {
-            videoFiles = files;
+        // Video 파일 처리
+        async function handleVideoFiles(files) {
+            videoFiles = Array.from(files).filter(file => {
+                if (!file.type.startsWith('video/')) return false;
+                if (file.size > 100 * 1024 * 1024) { // 100MB 제한
+                    alert(`${file.name}${getMessage('message_file_too_large')}`);
+                    return false;
+                }
+                return true;
+            });
             
+            if (videoFiles.length === 0) {
+                alert(getMessage('message_select_valid_video'));
+                return;
+            }
+
+            // FFmpeg 로드
+            await loadFFmpeg();
+
             // UI 업데이트
             document.getElementById('video-settings').style.display = 'block';
             document.getElementById('video-file-list').style.display = 'block';

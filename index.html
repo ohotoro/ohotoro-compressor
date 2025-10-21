@@ -176,17 +176,21 @@
             padding: 40px;
             margin-bottom: 30px;
             border: 1px solid #e6e6e6;
-            text-align: center;
         }
 
         .crop-section.active {
             display: block;
         }
 
+        .crop-container-wrapper {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
         .crop-wrapper {
             position: relative;
             max-width: 900px;
-            margin: 30px auto;
+            margin: 0 auto;
             background: #000;
             display: inline-block;
             text-align: left;
@@ -210,9 +214,38 @@
         .crop-box {
             position: absolute;
             border: 2px solid #fff;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
             cursor: move;
             pointer-events: auto;
+        }
+
+        .crop-overlay-top,
+        .crop-overlay-bottom,
+        .crop-overlay-left,
+        .crop-overlay-right {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+        }
+
+        .crop-overlay-top {
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .crop-overlay-bottom {
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .crop-overlay-left {
+            left: 0;
+        }
+
+        .crop-overlay-right {
+            right: 0;
         }
 
         .crop-handle {
@@ -236,13 +269,14 @@
         .crop-info {
             position: absolute;
             top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
             color: #fff;
             padding: 6px 12px;
             font-size: 10px;
             letter-spacing: 0.1em;
             pointer-events: none;
+            border-radius: 2px;
         }
 
         .settings-panel {
@@ -328,7 +362,9 @@
             display: none;
             justify-content: center;
             gap: 16px;
-            margin-top: 30px;
+            margin-top: 0;
+            padding-top: 20px;
+            border-top: 1px solid #e6e6e6;
         }
 
         .button-group.active {
@@ -598,48 +634,56 @@
 
             <!-- 크롭 섹션 -->
             <div class="crop-section" id="crop-section">
-                <div class="settings-label i18n" data-i18n="crop_title"></div>
-                
-                <div class="settings-group">
-                    <label class="settings-label i18n" data-i18n="crop_ratio"></label>
-                    <div class="radio-group">
-                        <label class="radio-option selected">
-                            <input type="radio" name="crop-ratio" value="5:7" checked>
-                            <span>5:7</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="crop-ratio" value="1:1">
-                            <span>1:1</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="crop-ratio" value="4:5">
-                            <span>4:5</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="crop-ratio" value="16:9">
-                            <span>16:9</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="crop-ratio" value="free">
-                            <span class="i18n" data-i18n="ratio_free"></span>
-                        </label>
+                <div style="margin-bottom: 30px;">
+                    <div class="settings-label i18n" data-i18n="crop_title" style="margin-bottom: 20px;"></div>
+                    
+                    <div class="settings-group" style="margin-bottom: 30px;">
+                        <label class="settings-label i18n" data-i18n="crop_ratio"></label>
+                        <div class="radio-group">
+                            <label class="radio-option selected">
+                                <input type="radio" name="crop-ratio" value="5:7" checked>
+                                <span>5:7</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="crop-ratio" value="1:1">
+                                <span>1:1</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="crop-ratio" value="4:5">
+                                <span>4:5</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="crop-ratio" value="16:9">
+                                <span>16:9</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="crop-ratio" value="free">
+                                <span class="i18n" data-i18n="ratio_free"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="crop-wrapper" id="crop-wrapper">
-                    <canvas id="crop-canvas" class="crop-canvas"></canvas>
-                    <div class="crop-overlay">
-                        <div class="crop-box" id="crop-box">
-                            <div class="crop-handle nw"></div>
-                            <div class="crop-handle ne"></div>
-                            <div class="crop-handle sw"></div>
-                            <div class="crop-handle se"></div>
-                            <div class="crop-handle n"></div>
-                            <div class="crop-handle s"></div>
-                            <div class="crop-handle w"></div>
-                            <div class="crop-handle e"></div>
+                <div class="crop-container-wrapper">
+                    <div class="crop-wrapper" id="crop-wrapper">
+                        <canvas id="crop-canvas" class="crop-canvas"></canvas>
+                        <div class="crop-overlay">
+                            <div class="crop-overlay-top" id="crop-overlay-top"></div>
+                            <div class="crop-overlay-bottom" id="crop-overlay-bottom"></div>
+                            <div class="crop-overlay-left" id="crop-overlay-left"></div>
+                            <div class="crop-overlay-right" id="crop-overlay-right"></div>
+                            <div class="crop-box" id="crop-box">
+                                <div class="crop-handle nw"></div>
+                                <div class="crop-handle ne"></div>
+                                <div class="crop-handle sw"></div>
+                                <div class="crop-handle se"></div>
+                                <div class="crop-handle n"></div>
+                                <div class="crop-handle s"></div>
+                                <div class="crop-handle w"></div>
+                                <div class="crop-handle e"></div>
+                            </div>
+                            <div class="crop-info" id="crop-info">0 × 0</div>
                         </div>
-                        <div class="crop-info" id="crop-info">0 × 0</div>
                     </div>
                 </div>
 
@@ -1229,17 +1273,21 @@
             let width, height;
             
             if (ratio === 'free') {
-                width = canvasWidth * 0.8;
-                height = canvasHeight * 0.8;
+                // 가로 기준 90% 꽉차게
+                width = canvasWidth * 0.9;
+                height = canvasHeight * 0.9;
             } else {
                 const [w, h] = ratio.split(':').map(Number);
                 const aspectRatio = w / h;
-                if (canvasWidth / canvasHeight > aspectRatio) {
-                    height = canvasHeight * 0.8;
+                
+                // 가로 기준 90% 꽉차게
+                width = canvasWidth * 0.9;
+                height = width / aspectRatio;
+                
+                // 높이가 캔버스를 넘으면 높이 기준으로 재계산
+                if (height > canvasHeight * 0.9) {
+                    height = canvasHeight * 0.9;
                     width = height * aspectRatio;
-                } else {
-                    width = canvasWidth * 0.8;
-                    height = width / aspectRatio;
                 }
             }
             
@@ -1258,6 +1306,24 @@
             cropBox.style.top = cropData.y + 'px';
             cropBox.style.width = cropData.width + 'px';
             cropBox.style.height = cropData.height + 'px';
+            
+            // 4개 오버레이 업데이트
+            const overlayTop = document.getElementById('crop-overlay-top');
+            const overlayBottom = document.getElementById('crop-overlay-bottom');
+            const overlayLeft = document.getElementById('crop-overlay-left');
+            const overlayRight = document.getElementById('crop-overlay-right');
+            
+            overlayTop.style.height = cropData.y + 'px';
+            overlayBottom.style.height = (cropCanvas.height - cropData.y - cropData.height) + 'px';
+            
+            overlayLeft.style.top = cropData.y + 'px';
+            overlayLeft.style.width = cropData.x + 'px';
+            overlayLeft.style.height = cropData.height + 'px';
+            
+            overlayRight.style.top = cropData.y + 'px';
+            overlayRight.style.width = (cropCanvas.width - cropData.x - cropData.width) + 'px';
+            overlayRight.style.height = cropData.height + 'px';
+            
             const scaleX = currentImage.width / cropCanvas.width;
             const scaleY = currentImage.height / cropCanvas.height;
             const actualWidth = Math.round(cropData.width * scaleX);
@@ -1274,22 +1340,26 @@
             const aspectRatio = w / h;
             const centerX = cropData.x + cropData.width / 2;
             const centerY = cropData.y + cropData.height / 2;
-            let newWidth = cropData.width;
+            
+            // 가로 기준 90% 유지
+            let newWidth = cropCanvas.width * 0.9;
             let newHeight = newWidth / aspectRatio;
+            
+            // 높이가 캔버스를 벗어나면 높이 기준으로 재계산
             if (newHeight > cropCanvas.height * 0.9) {
                 newHeight = cropCanvas.height * 0.9;
                 newWidth = newHeight * aspectRatio;
             }
-            if (newWidth > cropCanvas.width * 0.9) {
-                newWidth = cropCanvas.width * 0.9;
-                newHeight = newWidth / aspectRatio;
-            }
+            
             cropData.width = newWidth;
             cropData.height = newHeight;
             cropData.x = centerX - newWidth / 2;
             cropData.y = centerY - newHeight / 2;
+            
+            // 경계 체크
             cropData.x = Math.max(0, Math.min(cropData.x, cropCanvas.width - cropData.width));
             cropData.y = Math.max(0, Math.min(cropData.y, cropCanvas.height - cropData.height));
+            
             updateCropBox();
         }
 

@@ -409,20 +409,39 @@
             background: #fff;
             border: 1px solid #e6e6e6;
             margin-bottom: 8px;
+            gap: 16px;
+        }
+
+        .file-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border: 1px solid #e6e6e6;
+            flex-shrink: 0;
         }
 
         .file-info {
             flex: 1;
+            min-width: 0;
         }
 
         .file-name {
             font-size: 11px;
             margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .file-size {
             font-size: 10px;
             color: #999;
+        }
+
+        .file-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .file-status {
@@ -431,6 +450,7 @@
             letter-spacing: 0.1em;
             padding: 4px 8px;
             background: #f5f5f5;
+            white-space: nowrap;
         }
 
         .file-status.processing {
@@ -443,6 +463,24 @@
 
         .file-status.error {
             background: #f8d7da;
+        }
+
+        .btn-recrop {
+            padding: 6px 12px;
+            border: 1px solid #e6e6e6;
+            background: #fff;
+            color: #666;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-recrop:hover {
+            border-color: #111;
+            color: #111;
         }
 
         .stats {
@@ -635,7 +673,10 @@
             <!-- 크롭 섹션 -->
             <div class="crop-section" id="crop-section">
                 <div style="margin-bottom: 30px;">
-                    <div class="settings-label i18n" data-i18n="crop_title" style="margin-bottom: 20px;"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div class="settings-label i18n" data-i18n="crop_title"></div>
+                        <div id="crop-progress-text" style="font-size: 11px; color: #666; letter-spacing: 0.1em;"></div>
+                    </div>
                     
                     <div class="settings-group" style="margin-bottom: 30px;">
                         <label class="settings-label i18n" data-i18n="crop_ratio"></label>
@@ -688,8 +729,9 @@
                 </div>
 
                 <div class="button-group active">
-                    <button class="btn" id="apply-crop" data-i18n="apply_crop"></button>
+                    <button class="btn btn-secondary" id="prev-crop" style="display: none;" data-i18n="prev_image"></button>
                     <button class="btn btn-secondary" id="skip-crop" data-i18n="skip_crop"></button>
+                    <button class="btn" id="apply-crop" data-i18n="apply_crop"></button>
                 </div>
             </div>
 
@@ -920,6 +962,8 @@
                 ratio_free: "自由",
                 apply_crop: "クロップを適用",
                 skip_crop: "スキップ",
+                prev_image: "前へ",
+                recrop: "再クロップ",
                 quality: "品質",
                 quality_high: "高 (90%)",
                 quality_medium: "中 (70%)",
@@ -977,6 +1021,8 @@
                 ratio_free: "자유",
                 apply_crop: "크롭 적용",
                 skip_crop: "건너뛰기",
+                prev_image: "이전",
+                recrop: "다시 크롭",
                 quality: "품질",
                 quality_high: "높음 (90%)",
                 quality_medium: "중간 (70%)",
@@ -1218,23 +1264,50 @@
             if (files.length === 0) return;
             photoFiles = files;
             currentImageIndex = 0;
-            croppedPhotos = [];
+            croppedPhotos = new Array(files.length).fill(null);
             loadImageForCrop(0);
         }
 
         function loadImageForCrop(index) {
             if (index >= photoFiles.length) {
+                // 크롭되지 않은 이미지가 있는지 확인
+                const uncroppedIndex = croppedPhotos.findIndex((item, i) => !item);
+                if (uncroppedIndex !== -1) {
+                    loadImageForCrop(uncroppedIndex);
+                    return;
+                }
                 finishCropping();
                 return;
             }
+            
+            if (index < 0) {
+                index = 0;
+            }
+
             currentImageIndex = index;
             const file = photoFiles[index];
+            
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
                     currentImage = img;
                     setupCropArea(img);
+                    
+                    // 이미 크롭한 적이 있으면 그 정보 불러오기
+                    if (croppedPhotos[index] && croppedPhotos[index].crop) {
+                        const saved = croppedPhotos[index].crop;
+                        const scaleX = cropCanvas.width / img.width;
+                        const scaleY = cropCanvas.height / img.height;
+                        
+                        cropData = {
+                            x: saved.x * scaleX,
+                            y: saved.y * scaleY,
+                            width: saved.width * scaleX,
+                            height: saved.height * scaleY
+                        };
+                        updateCropBox();
+                    }
                 };
                 img.src = e.target.result;
             };
@@ -1243,6 +1316,16 @@
 
         function setupCropArea(img) {
             document.getElementById('crop-section').classList.add('active');
+            
+            // 진행 상태 표시
+            const progressText = document.getElementById('crop-progress-text');
+            const fileName = photoFiles[currentImageIndex].name;
+            progressText.textContent = `${currentImageIndex + 1}/${photoFiles.length} - ${fileName}`;
+            
+            // 이전 버튼 표시/숨김
+            const prevBtn = document.getElementById('prev-crop');
+            prevBtn.style.display = currentImageIndex > 0 ? 'inline-block' : 'none';
+            
             const maxWidth = 800;
             const maxHeight = 600;
             let width = img.width;
@@ -1273,20 +1356,20 @@
             let width, height;
             
             if (ratio === 'free') {
-                // 가로 기준 90% 꽉차게
-                width = canvasWidth * 0.9;
-                height = canvasHeight * 0.9;
+                // 가로 기준 100% 꽉차게
+                width = canvasWidth;
+                height = canvasHeight;
             } else {
                 const [w, h] = ratio.split(':').map(Number);
                 const aspectRatio = w / h;
                 
-                // 가로 기준 90% 꽉차게
-                width = canvasWidth * 0.9;
+                // 가로 기준 100% 꽉차게
+                width = canvasWidth;
                 height = width / aspectRatio;
                 
                 // 높이가 캔버스를 넘으면 높이 기준으로 재계산
-                if (height > canvasHeight * 0.9) {
-                    height = canvasHeight * 0.9;
+                if (height > canvasHeight) {
+                    height = canvasHeight;
                     width = height * aspectRatio;
                 }
             }
@@ -1341,13 +1424,13 @@
             const centerX = cropData.x + cropData.width / 2;
             const centerY = cropData.y + cropData.height / 2;
             
-            // 가로 기준 90% 유지
-            let newWidth = cropCanvas.width * 0.9;
+            // 가로 기준 100% 유지
+            let newWidth = cropCanvas.width;
             let newHeight = newWidth / aspectRatio;
             
             // 높이가 캔버스를 벗어나면 높이 기준으로 재계산
-            if (newHeight > cropCanvas.height * 0.9) {
-                newHeight = cropCanvas.height * 0.9;
+            if (newHeight > cropCanvas.height) {
+                newHeight = cropCanvas.height;
                 newWidth = newHeight * aspectRatio;
             }
             
@@ -1523,21 +1606,67 @@
                 width: Math.round(cropData.width * scaleX),
                 height: Math.round(cropData.height * scaleY)
             };
-            croppedPhotos.push({
+            
+            // 썸네일 생성
+            const thumbCanvas = document.createElement('canvas');
+            const thumbCtx = thumbCanvas.getContext('2d');
+            thumbCanvas.width = 60;
+            thumbCanvas.height = 60;
+            
+            const thumbScale = Math.max(60 / cropInfo.width, 60 / cropInfo.height);
+            const thumbWidth = cropInfo.width * thumbScale;
+            const thumbHeight = cropInfo.height * thumbScale;
+            const thumbX = (60 - thumbWidth) / 2;
+            const thumbY = (60 - thumbHeight) / 2;
+            
+            thumbCtx.drawImage(
+                currentImage,
+                cropInfo.x, cropInfo.y, cropInfo.width, cropInfo.height,
+                thumbX, thumbY, thumbWidth, thumbHeight
+            );
+            
+            const thumbnail = thumbCanvas.toDataURL('image/jpeg', 0.7);
+            
+            croppedPhotos[currentImageIndex] = {
                 image: currentImage,
                 crop: cropInfo,
-                file: photoFiles[currentImageIndex]
-            });
+                file: photoFiles[currentImageIndex],
+                thumbnail: thumbnail
+            };
+            
             loadImageForCrop(currentImageIndex + 1);
         });
 
         document.getElementById('skip-crop').addEventListener('click', () => {
-            croppedPhotos.push({
+            // 원본 이미지 썸네일 생성
+            const thumbCanvas = document.createElement('canvas');
+            const thumbCtx = thumbCanvas.getContext('2d');
+            thumbCanvas.width = 60;
+            thumbCanvas.height = 60;
+            
+            const thumbScale = Math.max(60 / currentImage.width, 60 / currentImage.height);
+            const thumbWidth = currentImage.width * thumbScale;
+            const thumbHeight = currentImage.height * thumbScale;
+            const thumbX = (60 - thumbWidth) / 2;
+            const thumbY = (60 - thumbHeight) / 2;
+            
+            thumbCtx.drawImage(currentImage, thumbX, thumbY, thumbWidth, thumbHeight);
+            const thumbnail = thumbCanvas.toDataURL('image/jpeg', 0.7);
+            
+            croppedPhotos[currentImageIndex] = {
                 image: currentImage,
                 crop: null,
-                file: photoFiles[currentImageIndex]
-            });
+                file: photoFiles[currentImageIndex],
+                thumbnail: thumbnail
+            };
+            
             loadImageForCrop(currentImageIndex + 1);
+        });
+
+        document.getElementById('prev-crop').addEventListener('click', () => {
+            if (currentImageIndex > 0) {
+                loadImageForCrop(currentImageIndex - 1);
+            }
         });
 
         function finishCropping() {
@@ -1554,13 +1683,32 @@
             croppedPhotos.forEach((item, index) => {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
+                
+                const thumbnailHTML = item && item.thumbnail 
+                    ? `<img src="${item.thumbnail}" class="file-thumbnail" alt="thumbnail">`
+                    : '<div class="file-thumbnail" style="background: #f5f5f5;"></div>';
+                
                 fileItem.innerHTML = `
+                    ${thumbnailHTML}
                     <div class="file-info">
                         <div class="file-name">${item.file.name}</div>
                         <div class="file-size">${formatFileSize(item.file.size)}</div>
                     </div>
-                    <div class="file-status" id="photo-status-${index}">${getMessage('status_waiting')}</div>
+                    <div class="file-actions">
+                        <button class="btn-recrop i18n" data-index="${index}" data-i18n="recrop">${getMessage('recrop')}</button>
+                        <div class="file-status" id="photo-status-${index}">${getMessage('status_waiting')}</div>
+                    </div>
                 `;
+                
+                // 다시 크롭 버튼 이벤트
+                const recropBtn = fileItem.querySelector('.btn-recrop');
+                recropBtn.addEventListener('click', () => {
+                    document.getElementById('photo-settings').style.display = 'none';
+                    document.getElementById('photo-file-list').classList.remove('active');
+                    document.getElementById('photo-buttons').classList.remove('active');
+                    loadImageForCrop(index);
+                });
+                
                 fileList.appendChild(fileItem);
             });
         }
@@ -1688,6 +1836,7 @@
             croppedPhotos = [];
             processedPhotos = [];
             currentImage = null;
+            currentImageIndex = 0;
             document.getElementById('crop-section').classList.remove('active');
             document.getElementById('photo-settings').style.display = 'none';
             document.getElementById('photo-file-list').classList.remove('active');

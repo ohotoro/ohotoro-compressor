@@ -1257,6 +1257,9 @@
             option.addEventListener('click', function() {
                 const input = this.querySelector('input');
                 const name = input.name;
+                const value = input.value;
+                
+                console.log('Radio button clicked:', name, '=', value);
                 
                 document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
                     radio.closest('.radio-option').classList.remove('selected');
@@ -1264,6 +1267,8 @@
                 
                 this.classList.add('selected');
                 input.checked = true;
+                
+                console.log('Radio button now checked:', input.checked);
                 
                 // 커스텀 입력 표시/숨김
                 if (name === 'resize') {
@@ -1654,10 +1659,15 @@
 
         // 이미지 처리 버튼
         document.getElementById('image-process').addEventListener('click', async () => {
+            console.log('===== IMAGE PROCESS BUTTON CLICKED =====');
+            console.log('Image files count:', imageFiles.length);
+            
             const quality = document.querySelector('input[name="quality"]:checked').value;
             const resize = document.querySelector('input[name="resize"]:checked').value;
             const cropRatio = document.querySelector('input[name="crop-ratio"]:checked').value;
             const keepOriginalName = document.getElementById('keep-original-name').checked;
+            
+            console.log('Settings:', { quality, resize, cropRatio, keepOriginalName });
 
             // Manual crop 모드일 경우 크롭 에디터 열기
             if (cropRatio === 'manual') {
@@ -2167,11 +2177,19 @@
 
         // 페이지 로드시 초기화
         window.addEventListener('load', () => {
+            console.log('===== PAGE LOADED =====');
+            
             // 언어 초기화
             initLanguage();
             
             // 저장된 설정 불러오기 및 적용
             settings.apply();
+            
+            // 라디오 버튼 상태 확인
+            console.log('Crop ratio buttons:');
+            document.querySelectorAll('input[name="crop-ratio"]').forEach(radio => {
+                console.log(`  ${radio.value}: checked=${radio.checked}, parent.selected=${radio.closest('.radio-option').classList.contains('selected')}`);
+            });
             
             console.log('OHOTORO HORIE Optimizer ready');
         });

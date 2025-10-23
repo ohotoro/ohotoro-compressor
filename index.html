@@ -1152,7 +1152,15 @@
             },
             load: function() {
                 const saved = localStorage.getItem('ohotoro-settings');
-                return saved ? JSON.parse(saved) : this.defaults;
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // defaults와 merge하여 누락된 값 채우기
+                    return {
+                        photo: { ...this.defaults.photo, ...(parsed.photo || {}) },
+                        video: { ...this.defaults.video, ...(parsed.video || {}) }
+                    };
+                }
+                return this.defaults;
             },
             save: function(type, key, value) {
                 const current = this.load();
@@ -1162,7 +1170,10 @@
             },
             apply: function() {
                 const saved = this.load();
+                
+                // Photo 설정 적용
                 ['quality', 'size', 'format'].forEach(key => {
+                    if (!saved.photo || !saved.photo[key]) return;
                     const input = document.querySelector(`input[name="photo-${key}"][value="${saved.photo[key]}"]`);
                     if (input) {
                         input.checked = true;
@@ -1172,7 +1183,10 @@
                         });
                     }
                 });
+                
+                // Video 설정 적용
                 ['quality', 'resolution'].forEach(key => {
+                    if (!saved.video || !saved.video[key]) return;
                     const input = document.querySelector(`input[name="video-${key}"][value="${saved.video[key]}"]`);
                     if (input) {
                         input.checked = true;
@@ -1182,7 +1196,11 @@
                         });
                     }
                 });
-                document.getElementById('remove-audio').checked = saved.video.removeAudio;
+                
+                const removeAudioCheckbox = document.getElementById('remove-audio');
+                if (removeAudioCheckbox && saved.video) {
+                    removeAudioCheckbox.checked = saved.video.removeAudio || false;
+                }
             }
         };
 

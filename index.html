@@ -367,10 +367,6 @@
             border-top: 1px solid #e6e6e6;
         }
 
-        .button-group.active {
-            display: flex;
-        }
-
         .btn {
             padding: 12px 32px;
             border: 1px solid #111;
@@ -395,10 +391,6 @@
         .file-list {
             display: none;
             margin-top: 30px;
-        }
-
-        .file-list.active {
-            display: block;
         }
 
         .file-item {
@@ -491,12 +483,6 @@
             border: 1px solid #e6e6e6;
         }
 
-        .stats.active {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-        }
-
         .stat-item {
             flex: 1;
         }
@@ -525,10 +511,6 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
-        }
-
-        .loading.active {
-            display: flex;
         }
 
         .loading-content {
@@ -564,10 +546,6 @@
             background: #e6e6e6;
             margin-top: 30px;
             overflow: hidden;
-        }
-
-        .progress-bar.active {
-            display: block;
         }
 
         .progress-fill {
@@ -728,7 +706,7 @@
                     </div>
                 </div>
 
-                <div class="button-group active">
+                <div class="button-group" style="display: flex;">
                     <button class="btn btn-secondary" id="prev-crop" style="display: none;" data-i18n="prev_image"></button>
                     <button class="btn btn-secondary" id="skip-crop" data-i18n="skip_crop"></button>
                     <button class="btn" id="apply-crop" data-i18n="apply_crop"></button>
@@ -1690,13 +1668,14 @@
         function finishCropping() {
             document.getElementById('crop-section').classList.remove('active');
             document.getElementById('photo-settings').style.display = 'block';
-            document.getElementById('photo-file-list').classList.add('active');
-            document.getElementById('photo-buttons').classList.add('active');
+            document.getElementById('photo-file-list').style.display = 'block';
+            document.getElementById('photo-buttons').style.display = 'flex';
             displayPhotoFiles();
         }
 
         function displayPhotoFiles() {
             const fileList = document.getElementById('photo-file-list');
+            fileList.style.display = 'block';
             fileList.innerHTML = '';
             croppedPhotos.forEach((item, index) => {
                 const fileItem = document.createElement('div');
@@ -1722,8 +1701,8 @@
                 const recropBtn = fileItem.querySelector('.btn-recrop');
                 recropBtn.addEventListener('click', () => {
                     document.getElementById('photo-settings').style.display = 'none';
-                    document.getElementById('photo-file-list').classList.remove('active');
-                    document.getElementById('photo-buttons').classList.remove('active');
+                    document.getElementById('photo-file-list').style.display = 'none';
+                    document.getElementById('photo-buttons').style.display = 'none';
                     loadImageForCrop(index);
                 });
                 
@@ -1736,9 +1715,10 @@
             const size = document.querySelector('input[name="photo-size"]:checked').value;
             const format = document.querySelector('input[name="photo-format"]:checked').value;
             
-            document.getElementById('photo-loading').classList.add('active');
+            const loading = document.getElementById('photo-loading');
+            loading.style.display = 'flex';
             const progressBar = document.getElementById('photo-progress');
-            progressBar.classList.add('active');
+            progressBar.style.display = 'block';
             
             processedPhotos = [];
             let totalOriginalSize = 0;
@@ -1766,11 +1746,11 @@
                 progressBar.querySelector('.progress-fill').style.width = ((i + 1) / croppedPhotos.length) * 100 + '%';
             }
 
-            document.getElementById('photo-loading').classList.remove('active');
+            loading.style.display = 'none';
             displayPhotoStats(totalOriginalSize, totalCompressedSize);
             showSuccessMessage(`${croppedPhotos.length}${getMessage('message_compressed')}`);
             document.getElementById('photo-download').style.display = 'inline-block';
-            progressBar.classList.remove('active');
+            progressBar.style.display = 'none';
         });
 
         async function processPhoto(item, quality, size, format) {
@@ -1827,7 +1807,10 @@
         }
 
         function displayPhotoStats(originalSize, compressedSize) {
-            document.getElementById('photo-stats').classList.add('active');
+            const stats = document.getElementById('photo-stats');
+            stats.style.display = 'flex';
+            stats.style.justifyContent = 'space-around';
+            stats.style.textAlign = 'center';
             document.getElementById('photo-total-files').textContent = croppedPhotos.length;
             document.getElementById('photo-original-size').textContent = formatFileSize(originalSize);
             document.getElementById('photo-compressed-size').textContent = formatFileSize(compressedSize);
@@ -1857,9 +1840,9 @@
             currentImageIndex = 0;
             document.getElementById('crop-section').classList.remove('active');
             document.getElementById('photo-settings').style.display = 'none';
-            document.getElementById('photo-file-list').classList.remove('active');
-            document.getElementById('photo-stats').classList.remove('active');
-            document.getElementById('photo-buttons').classList.remove('active');
+            document.getElementById('photo-file-list').style.display = 'none';
+            document.getElementById('photo-stats').style.display = 'none';
+            document.getElementById('photo-buttons').style.display = 'none';
             document.getElementById('photo-download').style.display = 'none';
             photoInput.value = '';
         });
@@ -1870,17 +1853,27 @@
 
         async function loadFFmpeg() {
             if (ffmpegLoaded) return;
+            
+            const loading = document.getElementById('video-loading');
+            loading.style.display = 'flex';
+            loading.querySelector('.loading-text').textContent = getMessage('message_preparing');
+            
             try {
-                const { createFFmpeg } = FFmpeg;
-                ffmpeg = createFFmpeg({ log: false });
+                ffmpeg = FFmpeg.createFFmpeg({
+                    log: false,
+                    corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js'
+                });
+                
                 await ffmpeg.load();
                 ffmpegLoaded = true;
-                console.log('FFmpeg loaded');
+                console.log('Video processor ready');
             } catch (error) {
                 console.error('Failed to load FFmpeg:', error);
+                alert(getMessage('message_loading_failed'));
+            } finally {
+                loading.style.display = 'none';
             }
         }
-        loadFFmpeg();
 
         videoUploadArea.addEventListener('click', () => videoInput.click());
         videoUploadArea.addEventListener('dragover', (e) => {
@@ -1893,27 +1886,41 @@
         videoUploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             videoUploadArea.classList.remove('dragover');
-            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('video/') && f.size <= 100 * 1024 * 1024);
-            handleVideoFiles(files);
+            handleVideoFiles(e.dataTransfer.files);
         });
         videoInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files).filter(f => f.size <= 100 * 1024 * 1024);
-            handleVideoFiles(files);
+            handleVideoFiles(e.target.files);
         });
 
-        function handleVideoFiles(files) {
-            if (files.length === 0) return;
-            videoFiles = files;
+        async function handleVideoFiles(files) {
+            videoFiles = Array.from(files).filter(file => {
+                if (!file.type.startsWith('video/')) return false;
+                if (file.size > 100 * 1024 * 1024) { // 100MB 제한
+                    alert(`${file.name}${getMessage('message_file_too_large')}`);
+                    return false;
+                }
+                return true;
+            });
+            
+            if (videoFiles.length === 0) {
+                alert(getMessage('message_select_valid_video'));
+                return;
+            }
+
+            // FFmpeg 로드
+            await loadFFmpeg();
+
             processedVideos = [];
             document.getElementById('video-settings').style.display = 'block';
-            document.getElementById('video-file-list').classList.add('active');
-            document.getElementById('video-buttons').classList.add('active');
+            document.getElementById('video-file-list').style.display = 'block';
+            document.getElementById('video-buttons').style.display = 'flex';
             displayVideoFiles();
         }
 
         function displayVideoFiles() {
             const fileList = document.getElementById('video-file-list');
             fileList.innerHTML = '';
+            
             videoFiles.forEach((file, index) => {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
@@ -1938,9 +1945,10 @@
             const resolution = document.querySelector('input[name="video-resolution"]:checked').value;
             const removeAudio = document.getElementById('remove-audio').checked;
 
-            document.getElementById('video-loading').classList.add('active');
+            const loading = document.getElementById('video-loading');
+            loading.style.display = 'flex';
             const progressBar = document.getElementById('video-progress');
-            progressBar.classList.add('active');
+            progressBar.style.display = 'block';
             
             processedVideos = [];
             let totalOriginalSize = 0;
@@ -1968,11 +1976,11 @@
                 progressBar.querySelector('.progress-fill').style.width = ((i + 1) / videoFiles.length) * 100 + '%';
             }
 
-            document.getElementById('video-loading').classList.remove('active');
+            loading.style.display = 'none';
             displayVideoStats(totalOriginalSize, totalCompressedSize);
             showSuccessMessage(`${videoFiles.length}${getMessage('message_compressed_video')}`);
             document.getElementById('video-download').style.display = 'inline-block';
-            progressBar.classList.remove('active');
+            progressBar.style.display = 'none';
         });
 
         async function processVideo(file, quality, resolution, removeAudio) {
@@ -2006,7 +2014,10 @@
         }
 
         function displayVideoStats(originalSize, compressedSize) {
-            document.getElementById('video-stats').classList.add('active');
+            const stats = document.getElementById('video-stats');
+            stats.style.display = 'flex';
+            stats.style.justifyContent = 'space-around';
+            stats.style.textAlign = 'center';
             document.getElementById('video-total-files').textContent = videoFiles.length;
             document.getElementById('video-original-size').textContent = formatFileSize(originalSize);
             document.getElementById('video-compressed-size').textContent = formatFileSize(compressedSize);
@@ -2032,9 +2043,9 @@
             videoFiles = [];
             processedVideos = [];
             document.getElementById('video-settings').style.display = 'none';
-            document.getElementById('video-file-list').classList.remove('active');
-            document.getElementById('video-stats').classList.remove('active');
-            document.getElementById('video-buttons').classList.remove('active');
+            document.getElementById('video-file-list').style.display = 'none';
+            document.getElementById('video-stats').style.display = 'none';
+            document.getElementById('video-buttons').style.display = 'none';
             document.getElementById('video-download').style.display = 'none';
             videoInput.value = '';
         });

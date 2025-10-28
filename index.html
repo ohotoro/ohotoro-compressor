@@ -2235,15 +2235,4 @@
         });
     </script>
 </body>
-</html>ById('reset-settings').addEventListener('click', () => {
-            if (confirm(getMessage('message_reset_confirm'))) {
-                localStorage.removeItem('ohotoro-settings');
-                showSuccessMessage(getMessage('message_initialized'));
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            }
-        });
-    </script>
-</body>
 </html>

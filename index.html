@@ -1149,9 +1149,17 @@
             
             // localStorage에서 설정 불러오기
             load: function() {
-                const saved = localStorage.getItem('ohotoro-settings');
-                if (saved) {
-                    return JSON.parse(saved);
+                try {
+                    const saved = localStorage.getItem('ohotoro-settings');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        // 유효성 검증
+                        if (parsed && typeof parsed === 'object') {
+                            return parsed;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('설정 로드 실패, 기본값 사용:', e);
                 }
                 return this.defaults;
             },
@@ -1168,8 +1176,14 @@
             apply: function() {
                 const saved = this.load();
                 
+                // saved 객체가 불완전할 수 있으므로 defaults와 병합
+                const settings = {
+                    photo: { ...this.defaults.photo, ...(saved.photo || {}) },
+                    video: { ...this.defaults.video, ...(saved.video || {}) }
+                };
+                
                 // Photo 설정 적용
-                const photoQuality = document.querySelector(`input[name="photo-quality"][value="${saved.photo.quality}"]`);
+                const photoQuality = document.querySelector(`input[name="photo-quality"][value="${settings.photo.quality}"]`);
                 if (photoQuality) {
                     photoQuality.checked = true;
                     photoQuality.closest('.radio-option').classList.add('selected');
@@ -1181,7 +1195,7 @@
                     });
                 }
                 
-                const photoSize = document.querySelector(`input[name="photo-size"][value="${saved.photo.size}"]`);
+                const photoSize = document.querySelector(`input[name="photo-size"][value="${settings.photo.size}"]`);
                 if (photoSize) {
                     photoSize.checked = true;
                     photoSize.closest('.radio-option').classList.add('selected');
@@ -1192,7 +1206,7 @@
                     });
                 }
                 
-                const photoFormat = document.querySelector(`input[name="photo-format"][value="${saved.photo.format}"]`);
+                const photoFormat = document.querySelector(`input[name="photo-format"][value="${settings.photo.format}"]`);
                 if (photoFormat) {
                     photoFormat.checked = true;
                     photoFormat.closest('.radio-option').classList.add('selected');
@@ -1204,7 +1218,7 @@
                 }
                 
                 // Video 설정 적용
-                const videoQuality = document.querySelector(`input[name="video-quality"][value="${saved.video.quality}"]`);
+                const videoQuality = document.querySelector(`input[name="video-quality"][value="${settings.video.quality}"]`);
                 if (videoQuality) {
                     videoQuality.checked = true;
                     videoQuality.closest('.radio-option').classList.add('selected');
@@ -1215,7 +1229,7 @@
                     });
                 }
                 
-                const videoResolution = document.querySelector(`input[name="video-resolution"][value="${saved.video.resolution}"]`);
+                const videoResolution = document.querySelector(`input[name="video-resolution"][value="${settings.video.resolution}"]`);
                 if (videoResolution) {
                     videoResolution.checked = true;
                     videoResolution.closest('.radio-option').classList.add('selected');
@@ -1226,7 +1240,10 @@
                     });
                 }
                 
-                document.getElementById('remove-audio').checked = saved.video.removeAudio;
+                const removeAudioCheckbox = document.getElementById('remove-audio');
+                if (removeAudioCheckbox) {
+                    removeAudioCheckbox.checked = settings.video.removeAudio;
+                }
             }
         };
 

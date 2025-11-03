@@ -1837,7 +1837,7 @@
                 fileItem.innerHTML = `
                     <div class="file-info">
                         <div class="file-name">${file.name}</div>
-                        <div class="file-size">${formatFileSize(file.size)}</div>
+                        <div class="file-size" id="video-size-${index}">${formatFileSize(file.size)}</div>
                     </div>
                     <div class="file-status" id="video-status-${index}">${getMessage('status_waiting')}</div>
                 `;
@@ -1868,6 +1868,7 @@
             for (let i = 0; i < videoFiles.length; i++) {
                 const file = videoFiles[i];
                 const statusElement = document.getElementById(`video-status-${i}`);
+                const sizeElement = document.getElementById(`video-size-${i}`);
                 statusElement.textContent = getMessage('status_processing');
                 statusElement.className = 'file-status processing';
                 
@@ -1878,11 +1879,25 @@
                     const processed = await processVideo(file, quality, resolution, removeAudio);
                     processedVideos.push(processed);
                     
-                    totalOriginalSize += file.size;
-                    totalCompressedSize += processed.blob.size;
+                    totalOriginalSize += processed.originalSize;
+                    totalCompressedSize += processed.compressedSize;
                     
-                    statusElement.textContent = getMessage('status_complete');
+                    // 압축률 계산
+                    const compressionRate = Math.round((1 - processed.compressedSize / processed.originalSize) * 100);
+                    
+                    // 상태 및 용량 표시 업데이트
+                    if (processed.usedOriginal) {
+                        statusElement.textContent = getMessage('status_complete') + ' (원본 사용)';
+                        statusElement.style.fontSize = '9px';
+                    } else {
+                        statusElement.textContent = `${compressionRate}% ${getMessage('stat_saved')}`;
+                        statusElement.style.color = compressionRate > 0 ? '#666' : '#999';
+                    }
                     statusElement.className = 'file-status complete';
+                    
+                    // 용량 표시
+                    sizeElement.innerHTML = `${formatFileSize(processed.originalSize)} → <strong>${formatFileSize(processed.compressedSize)}</strong>`;
+                    
                 } catch (error) {
                     console.error('Error processing video:', error);
                     statusElement.textContent = getMessage('status_error');
@@ -1955,7 +1970,16 @@
             
             // 결과 읽기
             const outputData = ffmpeg.FS('readFile', outputName);
-            const blob = new Blob([outputData.buffer], { type: 'video/mp4' });
+            let blob = new Blob([outputData.buffer], { type: 'video/mp4' });
+            
+            // 원본과 비교해서 작은 쪽 선택
+            let usedOriginal = false;
+            if (blob.size >= file.size) {
+                // 압축 결과가 원본보다 크면 원본 사용
+                blob = file;
+                usedOriginal = true;
+                console.log(`${file.name}: 원본이 더 작아서 원본 사용 (원본: ${formatFileSize(file.size)}, 압축: ${formatFileSize(blob.size)})`);
+            }
             
             // 파일 시스템 정리
             ffmpeg.FS('unlink', inputName);
@@ -1968,7 +1992,10 @@
             return {
                 blob: blob,
                 name: fileName,
-                originalName: file.name
+                originalName: file.name,
+                originalSize: file.size,
+                compressedSize: blob.size,
+                usedOriginal: usedOriginal
             };
         }
 
